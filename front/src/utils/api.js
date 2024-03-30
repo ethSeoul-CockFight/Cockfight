@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { API_URL } from './consts';
 
-export const bettingAPI = async (account, egg, stage, betting) => {
+export const bettingAPI = async (account, egg, betting) => {
   const body = {
     address: account[0],
     egg,
@@ -9,14 +9,10 @@ export const bettingAPI = async (account, egg, stage, betting) => {
     volatile_chicken: 0,
     is_buy: false,
   };
-  const bettingBody = {
-    address: account[0],
-    stage,
-    betting,
-  };
+  
   try {
     const response = await axios.post(`${API_URL}/market/trade`, body);
-    const bettingResponse = await axios.post(`${API_URL}/betting`, bettingBody);
+    const bettingResponse = await axios.post(`${API_URL}/betting`, betting);
     console.log("Buy response:", response.data);
     console.log("Betting response:", bettingResponse.data);
     // Handle the response as needed

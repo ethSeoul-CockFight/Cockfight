@@ -156,6 +156,31 @@ const BettingStatusMessage = styled.div`
   text-align: center;
 `;
 
+const SuccessModal = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  padding: 20px;
+  background-color: white;
+  border: 2px solid #4CAF50;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  z-index: 1000; // Ensure it's above other content
+`;
+
+const ModalBackdrop = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999; // Behind the modal, but above other content
+`;
+
 
 
 const Lottery = () => {
@@ -171,7 +196,7 @@ const Lottery = () => {
   const [userEgg, setUserEgg] = useState(0);
   const [mostRecentGame, setMostRecentGame] = useState({});
   const [userRecentBetting, setUserRecentBetting] = useState({});
-
+  const [winNumber, setWinNumber] = useState(1599);
   const handleBet = (amount) => {
     setBetAmount(amount);
     // Additional logic for placing a bet...
@@ -180,26 +205,23 @@ const Lottery = () => {
   
   const fetchData = async () => {
     try {
-      const accountRes = await axios.get(`${API_URL}/user?account=${account}`);      
+      
       const mostRecentGame = await axios.get(`${API_URL}/game`);
       const endTime = Number(mostRecentGame.data.game.end_time) * 1000
-
-      const users = accountRes.data.users
       setMostRecentGame({
-          game_id: mostRecentGame.data.game.game_id,
-          winner_position: mostRecentGame.data.game.winner_position,
-          end_time: Number(mostRecentGame.data.game.end_time) * 1000,
-          is_ended: mostRecentGame.data.game.is_ended
+        game_id: mostRecentGame.data.game.game_id,
+        winner_position: mostRecentGame.data.game.winner_position,
+        end_time: Number(mostRecentGame.data.game.end_time) * 1000,
+        is_ended: mostRecentGame.data.game.is_ended
       });
       setTargetDate(endTime);
       if (account) {
-        console.log("endTime:", endTime)
-        const bettingRes = await axios.get(`${API_URL}/betting?address=${account}`);
-        console.log("bettingRes:", bettingRes);
+        const accountRes = await axios.get(`${API_URL}/user?address=${account[0]}`);      
+        const users = accountRes.data.users
         setUserEgg(users[0].egg); // Assuming the response contains an eggBalance field
       }
     } catch (error) {
-      console.error("Failed to on lottery:", error);
+      console.error("Failed to on fetch data:", error);
       // Handle error appropriately
     }
   };
@@ -224,7 +246,10 @@ const Lottery = () => {
   const handleSubmit = async(e) => {
     e.preventDefault();
     
-    console.log('handleSubmit:', betAmount, account, hasCountdownFinished);
+    if (hasSubmitted) {
+      alert("You've already submitted your bet!");
+      return;
+    }
     if (betAmount === 0) {
       alert("Please select a bet amount!");
       return;
@@ -252,29 +277,43 @@ const Lottery = () => {
       amount: betAmount,
       position: entry
     })
-    bettingAPI(account, betAmount);
+    
+    const bettingBody = {
+      address: account[0],
+      game_id: mostRecentGame.game_id,
+      egg: betAmount,
+      position: entry
+    };
+
+    bettingAPI(account, betAmount, bettingBody);
+
+
     setHasSubmitted(true); // Disable further submissions
   };
 
 
   const handlePreviousBetting = async () => {
-    const game_id = userRecentBetting.game_id
-    console.log('userRecentBetting:', userRecentBetting)
-    if (!game_id) return
-
-    const gameRes = await axios.get(`${API_URL}/game?game_id=${game_id}`);
-
-    const winNumber = gameRes.data.game.winner_position;
-    console.log('winNumber:', winNumber, entry)
-    const didWin = entry === winNumber;
-    setIsSuccess(didWin);
-    setLotteryResult(didWin ? "Congratulations! You've won!" : "Sorry, better luck next time!");
+    try{
+      const didWin = entry === winNumber;
+      setIsSuccess(didWin);
+      setLotteryResult(didWin ? "Congratulations! You've won!" : "Sorry, better luck next time!");
+    } catch (error) {
+      console.error("Failed on lottery:");
+      // Handle error appropriately
+    }
   }
+  
+  useEffect(() => {
+    if (hasCountdownFinished){
+      handlePreviousBetting();
+      setHasSubmitted(false);
+    }
+  }, [hasCountdownFinished])
 
   useEffect(() => {
     fetchData();
-    handlePreviousBetting()
   }, []);
+
 
   useEffect(() => {
     if (targetDate) {
@@ -282,8 +321,10 @@ const Lottery = () => {
         const newCountdown = calculateCountdown();
         setCountdown(newCountdown);
         
+
         const now = new Date().getTime();
         if (targetDate <= now) {
+          handlePreviousBetting()
           setHasCountdownFinished(true);
           clearInterval(timer); // Stop the timer once the countdown is finished
         }
@@ -296,14 +337,15 @@ const Lottery = () => {
   return (
     <>
     <LotteryContainer>
-      {
-        mostRecentGame.is_ended && userRecentBetting.game_id === mostRecentGame.game_id ? (
-          <BettingStatusMessage>
-            Your bet for game {mostRecentGame.game_id} was {userRecentBetting.amount} eggs.
-            {userRecentBetting.didWin ? " Congratulations, you won!" : " Better luck next time!"}
-          </BettingStatusMessage>
-        ) : null
-      }
+      {hasSubmitted && (
+        <>
+          <ModalBackdrop onClick={() => setHasSubmitted(false)} />
+          <SuccessModal>
+            Your Betting Submitted!
+            {/* <button onClick={() => setHasSubmitted(false)}>Close</button> */}
+          </SuccessModal>
+        </>
+      )}
       <Title>Lottery</Title>
       <form onSubmit={handleSubmit}>
         <Input
@@ -313,7 +355,7 @@ const Lottery = () => {
           placeholder="Enter a 4-digit number"
           maxLength="4"
         />
-        <SubmitButton type="submit" disabled={hasSubmitted}>Submit Entry</SubmitButton>
+        <SubmitButton type="submit" disabled={hasSubmitted}>Submit</SubmitButton>
       </form>
       
       <div>
@@ -321,7 +363,7 @@ const Lottery = () => {
         <BettingButton onClick={() => handleBet(5)}>5</BettingButton>
         <BettingButton onClick={() => handleBet(10)}>10</BettingButton>
       </div>
-      {hasCountdownFinished ? (
+      {hasSubmitted ? (
         lotteryResult && (
           <Result isSuccess={isSuccess}>
             {lotteryResult}
