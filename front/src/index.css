@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Shilla_CultureB-Bold";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-02@1.0/Shilla_CultureB-Bold.woff2")
+    format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SeoulNamsanM";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/SeoulNamsanM.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SeoulHangangM";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/SeoulHangangM.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 100vh;
+  background: transparent;
+}
+
+.iphone {
+  width: 390px;
+  height: 844px;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  border-radius: 50px;
+  position: relative;
+  box-shadow: 10px 10px 50px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  z-index: 1;
+}
+
+.navigation-bar {
+  display: flex;
+  position: sticky;
+  top: 0;
+  justify-content: space-between;
+  padding: 15px 30px;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+  background: linear-gradient(125deg, #ffffff, #f0f0f0);
+  color: #000;
+  z-index: 3;
+}
+
+.time {
+  font-size: 17px;
+  font-weight: 700;
+  margin-right: 10px;
+  margin-top: 7px;
+  color: #000;
+}
+
+.status-icons {
+  display: flex;
+  align-items: center;
+  margin-top: 7px;
+}
+
+.icon {
+  font-size: 17px;
+  margin-left: 6px;
+  color: #000;
+  stroke-width: 7px;
+}
