@@ -31,9 +31,9 @@ const Footer = () => {
     navigate("/market");
   };
 
-  const onClickQr = () => {
-    setActiveMenu("myPage");
-    navigate("/myPage");
+  const onClickMyPage = () => {
+    setActiveMenu('myPage')
+    navigate('/my-page');
   };
 
   return (
@@ -66,11 +66,11 @@ const Footer = () => {
         />
         <IconLabel>Dash board</IconLabel>
       </FooterButton>
-      <FooterButton onClick={onClickQr} isActive={activeMenu === "myPage"}>
-        <GoPerson
-          size="24px"
-          color={activeMenu === "myPage" ? "#582fff" : "#4b5563"}
-        />
+      <FooterButton
+        onClick={onClickMyPage}
+        isActive={activeMenu === 'myPage'}
+      >
+        <GoPerson size="24px" color={activeMenu === 'myPage' ? "#582fff" : "#4b5563"} />
         <IconLabel>My Page</IconLabel>
       </FooterButton>
     </FooterContainer>

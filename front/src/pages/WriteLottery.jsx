@@ -31,7 +31,7 @@ const WriteLottery = () => {
     };
 
     const goToHome = () => navigate('/main');
-    const goToMyPage = () => navigate('/my');
+    const goToMyPage = () => navigate('/my-page');
 
     const [digits, setDigits] = useState(["_", "_", "_", "_"]);
 
