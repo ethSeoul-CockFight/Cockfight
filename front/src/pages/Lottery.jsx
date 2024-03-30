@@ -13,6 +13,7 @@ const Lottery = () => {
     const handleStartGame = () => {
         navigate('/buy-lottery'); // 여기서 '/your-destination-path'는 이동하고자 하는 경로입니다.
       };
+      
   return (
     <div style={{ maxWidth: '540px', margin: 'auto' }}>
       <div>

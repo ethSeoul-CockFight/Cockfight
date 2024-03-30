@@ -1,45 +1,74 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import eggImage from "../images/egg.png";
+
 import LoadingPage from "../components/Loading";
 import { formatAmount, truncate } from "../utils/helpper";
-import { getNativeBalance } from "../evmInteraction/connect";
+import { getNativeBalance, getChikenBalance } from "../evmInteraction/connect";
+import { API_URL } from "../utils/consts";
+import WithdrawModal from "../components/WithdrawModal";
+import { getFaucet } from "../web3config/chain";
 
 const MyPage = () => {
-  const { account, setAccount, web3, decimals } = useContext(AppContext);
+  const { account, web3, decimals, nft_c } = useContext(AppContext);
   const [balance, setBalance] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [isModalOn, setIsModalOn] = useState(false);
   const [isFaucetLoading, setIsFaucetLoading] = useState(false);
-  const [chickenBalance, setChickenBalance] = useState(0);
-  const [eggBalance, setEggBalance] = useState(0);
-  const [data, setData] = useState();
+  const [stableChicken, setStableChicken] = useState(0);
+  const [volatileChicken, setVolatileChicken] = useState(0);
+  const [userEgg, setUserEgg] = useState(0);
+  const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const faucet = getFaucet();
 
-  const onClickModal = () => {
-    setIsModalOn(!isModalOn);
+  const fetchData = async () => {
+    try {
+      console.log("account:", account);
+      // const res = await axios.get(`${API_URL}/user?account=${account}`);
+      // const users = res.data.users;
+
+      if (account[0]) {
+        setStableChicken(await getChikenBalance(account, nft_c)); // Assuming the response contains an eggBalance field
+        // setUserEgg(users[0].egg); // Assuming the response contains an eggBalance field
+      }
+    } catch (error) {
+      console.error("Failed to fetch egg balance:", error);
+      // Handle error appropriately
+    }
+  };
+  useEffect(() => {
+    if (!account) {
+      navigate("/main");
+    }
+  }, []);
+
+  const openModal = () => {
+    setModalOpen(true);
+  };
+  const closeModal = () => {
+    setModalOpen(false);
   };
 
   const onClickFaucet = async () => {
     try {
       setIsFaucetLoading(true);
-      await getNativeBalance(web3, account);
+      console.log(faucet);
+      window.open(faucet, "_blank");
     } catch (error) {
       console.error(error);
     }
     setIsFaucetLoading(false);
   };
 
-  function waitTenSeconds() {
-    return new Promise((resolve) => {
-      setTimeout(resolve, 3000);
-    });
-  }
-
   const get_account_data = async () => {
+    setIsLoading(true);
     try {
-      await waitTenSeconds();
       const response = await getNativeBalance(web3, account);
       const value = formatAmount(response, decimals);
       setBalance(value);
+      await fetchData();
     } catch (error) {
       console.error(error);
     }
@@ -95,13 +124,21 @@ const MyPage = () => {
                   <div>
                     <div>Stable</div>
                     <div className="text-xl font-bold">
-                      {chickenBalance} Chickens
+                      {stableChicken} Chickens
                     </div>
                   </div>
-                  <button className="bg-slate-300 rounded-lg h-12 p-1">
+                  <button
+                    className="bg-slate-300 rounded-lg h-12 p-1"
+                    onClick={openModal}
+                  >
                     Unstaking
                   </button>
                 </div>
+                <WithdrawModal
+                  isOpen={modalOpen}
+                  onClose={closeModal}
+                  userAccount={account[0]}
+                />
                 {/* Volatile 치킨 */}
                 <div className="flex mt-2 bg-slate-50	rounded-lg h-24 p-2 shadow-md mb-4 justify-between items-center">
                   <img
@@ -112,7 +149,9 @@ const MyPage = () => {
 
                   <div>
                     <div>Volatile</div>
-                    <div className="text-xl font-bold">36 Chickens</div>
+                    <div className="text-xl font-bold">
+                      {volatileChicken} Chickens
+                    </div>
                   </div>
                   <button className=" bg-slate-300 rounded-lg h-12 p-1">
                     Unstaking
@@ -123,12 +162,10 @@ const MyPage = () => {
               <div className="mb-10 text-lg">
                 Eggs
                 <div className="flex mt-2 bg-slate-50	rounded-lg h-24 p-2 shadow-md mb-4 justify-between items-center">
-                  <div className="flex rounded-full bg-slate-300 h-16 w-16 text-xs justify-center items-center	">
-                    Eggs
-                  </div>
+                  <ImageBox className="m-3 p-1" src={eggImage} alt="Egg" />
                   <div>
                     <div className=" flex justify-start text-xl font-bold mr-44">
-                      {eggBalance} Eggs
+                      {userEgg} Eggs
                     </div>
                   </div>
                 </div>
@@ -153,3 +190,11 @@ const MyPage = () => {
 };
 
 export default MyPage;
+
+const ImageBox = styled.img`
+  width: 46px;
+  height: 44px;
+  background-color: white;
+  border-radius: 50%;
+  object-fit: cover;
+`;

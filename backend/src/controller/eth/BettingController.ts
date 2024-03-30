@@ -62,7 +62,7 @@ export class BettingController extends KoaController {
                 description: 'The eggs of the user'
               },
             },
-            required: ['game_id', 'winner_position']
+            required: ['game_id', 'address', 'winner_position', 'eggs']
           }
         },
       }
