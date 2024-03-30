@@ -1,15 +1,15 @@
-import React, { useContext, useState } from "react";
-import { buyContract } from "../evmInteraction/buyChickens.jsx";
-import { AppContext } from "../App.jsx";
-import axios from "axios";
-import { API_URL } from "../utils/consts.js";
+import React, { useContext, useState } from 'react';
+import { buyContract } from '../evmInteraction/buyChickens.jsx';
+import { AppContext } from '../App.jsx';
+import axios from 'axios';
+import { API_URL } from '../utils/consts.js';
 
 const Modal = ({ isOpen, onClose, isVolatile }) => {
   const { account, vault_c, decimals } = useContext(AppContext);
-  const [quantity, setQuantity] = useState("");
+  const quantity = 1;
 
   const buyAPI = async (chicken) => {
-    console.log(isVolatile)
+    console.log(isVolatile);
     const body = {
       address: account[0],
       egg: 0,
@@ -19,10 +19,10 @@ const Modal = ({ isOpen, onClose, isVolatile }) => {
     };
     try {
       const response = await axios.post(`${API_URL}/market/trade`, body);
-      console.log("Buy response:", response.data);
+      console.log('Buy response:', response.data);
       // Handle the response as needed
     } catch (error) {
-      console.error("Failed to perform buy operation:", error);
+      console.error('Failed to perform buy operation:', error);
       // Handle error appropriately
     }
   };
@@ -37,16 +37,18 @@ const Modal = ({ isOpen, onClose, isVolatile }) => {
     };
     try {
       const response = await axios.post(`${API_URL}/market/trade`, body);
-      console.log("Sell response:", response.data);
+      console.log('Sell response:', response.data);
     } catch (error) {
-      console.error("Failed to fetch egg balance:", error);
+      console.error('Failed to fetch egg balance:', error);
       // Handle error appropriately
     }
   };
 
   const buyChickens = async () => {
-    await buyContract(account, vault_c, decimals);
-    await buyAPI(quantity);
+    const response = await buyContract(account, vault_c, decimals);
+    if (response) {
+      await buyAPI(quantity);
+    }
     onClose();
   };
 
@@ -56,10 +58,6 @@ const Modal = ({ isOpen, onClose, isVolatile }) => {
     onClose();
   };
 
-  const handleQuantityChange = (e) => {
-    setQuantity(e.target.value);
-  };
-
   return isOpen ? (
     <div className="fixed inset-0 flex items-center justify-center z-10">
       <div className="fixed inset-0 bg-black opacity-50"></div>
@@ -67,7 +65,7 @@ const Modal = ({ isOpen, onClose, isVolatile }) => {
         {/* 모달 헤더 */}
         <div className="modal-content mb-4 flex justify-between items-center ">
           <div className="text-blue-500 text-2xl font-bold">
-            Chicken Details {isVolatile ? "Volatile" : "Stable"}
+            Chicken Details {isVolatile ? 'Volatile' : 'Stable'}
           </div>
           <div onClick={onClose}>
             <img
@@ -86,15 +84,7 @@ const Modal = ({ isOpen, onClose, isVolatile }) => {
             <div className="mb-4">
               Instant Eggs: <span>{quantity * 10} - Eggs</span>
             </div>
-            <div className="mb-4 flex items-center">
-              <div>Quantity: </div>
-              <input
-                type="text"
-                value={quantity} // Bind input to state
-                onChange={handleQuantityChange} // Update state on change
-                className="rounded w-20 h-8 bg-white border border-gray-300 ml-2 text-center"
-              />
-            </div>
+            <div className="mb-4 flex items-center"></div>
           </div>
         </div>
 

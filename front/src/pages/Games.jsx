@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -8,26 +8,34 @@ import rulletImageC from '../images/main.png';
 import { useNavigate } from 'react-router-dom';
 import footerStore from '../stores/footerStore';
 import { API_URL } from '../utils/consts';
-import axios from "axios";
+import axios from 'axios';
+import { AppContext } from '../App';
 
 const Games = () => {
   const { setActiveMenu } = footerStore();
+  const { account, setAccount, web3, decimals, nft_c } = useContext(AppContext);
+
   const navigate = useNavigate();
   const handleStartGame = () => {
     navigate('/lottery');
     setActiveMenu('game');
   };
   const [targetDate, setTargetDate] = useState(0);
-  const [countdown, setCountdown] = useState("00:00:00");
+  const [countdown, setCountdown] = useState('00:00:00');
+
+  useEffect(() => {
+    if (!account) {
+      navigate('/main');
+    }
+  }, []);
 
   const fetchData = async () => {
     try {
-      
       const mostRecentGame = await axios.get(`${API_URL}/game`);
-      const endTime = Number(mostRecentGame.data.game.end_time) * 1000
+      const endTime = Number(mostRecentGame.data.game.end_time) * 1000;
       setTargetDate(endTime);
     } catch (error) {
-      console.error("Failed to on fetch data:", error);
+      console.error('Failed to on fetch data:', error);
       // Handle error appropriately
     }
   };
@@ -37,11 +45,15 @@ const Games = () => {
     const now = new Date().getTime();
     const distance = targetDate - now;
 
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const hours = Math.floor(
+      (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+    );
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    return `${hours.toString().padStart(2, '0')}:${minutes
+      .toString()
+      .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
 
   useEffect(() => {
@@ -53,17 +65,16 @@ const Games = () => {
       const timer = setInterval(() => {
         const newCountdown = calculateCountdown();
         setCountdown(newCountdown);
-        
+
         const now = new Date().getTime();
         if (targetDate <= now) {
           clearInterval(timer); // Stop the timer once the countdown is finished
         }
       }, 1000);
-  
+
       return () => clearInterval(timer);
     }
   }, [targetDate]);
-
 
   return (
     <>
