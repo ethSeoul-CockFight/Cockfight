@@ -2,46 +2,54 @@ import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
 import LoadingPage from "../components/Loading";
 import { formatAmount, truncate } from "../utils/helpper";
-import { getNativeBalance } from "../evmInteraction/connect";
+import { getNativeBalance, getChikenBalance } from "../evmInteraction/connect";
 import axios from "axios";
 import { API_URL } from "../utils/consts";
+import WithdrawModal from "../components/WithdrawModal";
 
 const MyPage = () => {
-  const { account, setAccount, web3, decimals } = useContext(AppContext);
+  const { account, setAccount, web3, decimals, vault_c, nft_c } =
+    useContext(AppContext);
   const [balance, setBalance] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [isModalOn, setIsModalOn] = useState(false);
   const [isFaucetLoading, setIsFaucetLoading] = useState(false);
   const [stableChicken, setStableChicken] = useState(0);
   const [volatileChicken, setVolatileChicken] = useState(0);
   const [userEgg, setUserEgg] = useState(0);
   const [data, setData] = useState();
+  const [modalOpen, setModalOpen] = useState(false);
 
   const fetchData = async () => {
     try {
-        console.log('account:', account)
-        const res = await axios.get(`${API_URL}/user?account=${account}`);
-        const users = res.data.users
-        
-        if (account) {
-          setStableChicken(users[0].stable_chicken); // Assuming the response contains an eggBalance field
-          setVolatileChicken(users[0].volatile_chicken); // Assuming the response contains an eggBalance field
-          setUserEgg(users[0].egg); // Assuming the response contains an eggBalance field
-        } 
+      console.log("account:", account);
+      // const res = await axios.get(`${API_URL}/user?account=${account}`);
+      // const users = res.data.users;
 
-        } catch (error) {
-          console.error('Failed to fetch egg balance:', error);
-          // Handle error appropriately
-        }
-    };
+      if (account[0]) {
+        setStableChicken(await getChikenBalance(account, nft_c)); // Assuming the response contains an eggBalance field
+        // setUserEgg(users[0].egg); // Assuming the response contains an eggBalance field
+      }
+    } catch (error) {
+      console.error("Failed to fetch egg balance:", error);
+      // Handle error appropriately
+    }
+  };
 
-    useEffect(() => {
-      fetchData();
-    }, []);
+  const openModal = () => {
+    setModalOpen(true);
+  };
+  const closeModal = () => {
+    setModalOpen(false);
+  };
 
-
-  const onClickModal = () => {
-    setIsModalOn(!isModalOn);
+  const get_Data = async () => {
+    setIsLoading(true);
+    try {
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
   };
 
   const onClickFaucet = async () => {
@@ -74,6 +82,8 @@ const MyPage = () => {
 
   useEffect(() => {
     get_account_data();
+    get_Data();
+    fetchData();
   }, []);
 
   return (
@@ -124,10 +134,18 @@ const MyPage = () => {
                       {stableChicken} Chickens
                     </div>
                   </div>
-                  <button className="bg-slate-300 rounded-lg h-12 p-1">
+                  <button
+                    className="bg-slate-300 rounded-lg h-12 p-1"
+                    onClick={openModal}
+                  >
                     Unstaking
                   </button>
                 </div>
+                <WithdrawModal
+                  isOpen={modalOpen}
+                  onClose={closeModal}
+                  userAccount={account[0]}
+                />
                 {/* Volatile 치킨 */}
                 <div className="flex mt-2 bg-slate-50	rounded-lg h-24 p-2 shadow-md mb-4 justify-between items-center">
                   <img
@@ -138,7 +156,9 @@ const MyPage = () => {
 
                   <div>
                     <div>Volatile</div>
-                    <div className="text-xl font-bold">{volatileChicken} Chickens</div>
+                    <div className="text-xl font-bold">
+                      {volatileChicken} Chickens
+                    </div>
                   </div>
                   <button className=" bg-slate-300 rounded-lg h-12 p-1">
                     Unstaking
