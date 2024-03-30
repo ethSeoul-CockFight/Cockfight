@@ -48,14 +48,13 @@ export async function getNextEggTime(
   try {
     const qb = queryRunner.manager.getRepository(YieldPlanEntity)
     
-    const yieldPlan = await qb.findOne({
-      order: {
-        stage: 'DESC'
-      }
-    })
+    const yieldPlan = await qb.createQueryBuilder('yield_plan')
+      .orderBy('yield_plan.fund_time', 'DESC')
+      .getOne()
+    const currentTime = getCurrentTimeSecond()
 
     if (!yieldPlan) {
-      const currentTime = getCurrentTimeSecond()
+      
       const newYieldPlan: YieldPlanEntity = {
         stage: 0,
         fund_time: currentTime.toString(),
@@ -68,10 +67,17 @@ export async function getNextEggTime(
       }
     }
 
-    yieldPlan.stage += 1
     const next_fund_time = yieldPlan.next_fund_time
-    yieldPlan.fund_time = yieldPlan.next_fund_time
-    yieldPlan.next_fund_time = (Number(yieldPlan.next_fund_time) + 60).toString()
+    if (Number(yieldPlan.fund_time) < currentTime) {
+      console.log('fund time')
+      yieldPlan.stage += 1
+      yieldPlan.fund_time = (currentTime+ 60).toString()
+      yieldPlan.next_fund_time = (currentTime + 60 * 2).toString()
+      await qb.save(yieldPlan)
+      return {
+        next_egg_time: yieldPlan.next_fund_time
+      }
+    }
     
     return {
       next_egg_time : next_fund_time

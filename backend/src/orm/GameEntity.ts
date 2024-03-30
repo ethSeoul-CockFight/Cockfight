@@ -3,17 +3,14 @@ import { Entity, PrimaryColumn, Column } from 'typeorm'
 @Entity('game')
 export class GameEntity {
   @PrimaryColumn('int')
-  gameId: number
+  game_id: number
   
-  @Column('int')
-  positionNum: number 
-
   @Column('int', { nullable: true })
-  winnerPosition: number | null
+  winner_position: number | null
 
   @Column()
-  endTime: Date
+  end_time: number
 
   @Column()
-  isEnded: boolean
+  is_ended: boolean
 }

@@ -8,7 +8,7 @@ import eggImage from "../images/egg.png";
 import { AppContext } from "../App";
 import { connect } from "../evmInteraction/connect";
 import axios from "axios";
-import { API_URL } from "../utils/consts";
+import { API_URL, CHAIN } from "../utils/consts";
 
 const Main = () => {
   const { setActiveMenu } = footerStore();
@@ -16,11 +16,11 @@ const Main = () => {
   const [totalChicken, setTotalChicken] = useState(0);
   const [userChicken, setUserChicken] = useState(0);
   const [userEgg, setUserEgg] = useState(0);
-
+  
   const navigate = useNavigate();
   const onClickAccount = async () => {
     try {
-      const accounts = await connect("BFC");
+      const accounts = await connect(CHAIN);
       console.log(accounts);
       if (accounts) {
         setAccount(accounts);

@@ -1,5 +1,4 @@
 import { BettingController } from 'controller/eth/BettingController'
-import { SubmissionController } from 'controller/eth/SubmissionController'
 import { SwaggerRouter } from 'koa-swagger-decorator'
 
 const router = new SwaggerRouter({
@@ -14,6 +13,6 @@ const router = new SwaggerRouter({
 })
 
 router.swagger()
-router.applyRoute(BettingController).applyRoute(SubmissionController)
+router.applyRoute(BettingController)
 
 export { router }
