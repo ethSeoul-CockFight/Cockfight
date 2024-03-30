@@ -15,6 +15,7 @@ import Lottery from "./pages/Lottery";
 import Main from "./pages/Main";
 import { vault_abi } from "./web3config/CockfightVaultLight";
 import { nft_abi } from "./web3config/ChickenContractLight";
+import { getNftContract, getVaultContract } from "./web3config/chain";
 
 export const AppContext = createContext();
 
@@ -24,8 +25,8 @@ function App() {
   const [decimals, setDecimals] = useState(18);
   const [account, setAccount] = useState("");
   const web3 = new Web3(window.ethereum);
-  const n_add = "0xD85Cd1c7FC69d5a42aA41Ed3D61c0AAEe712b810";
-  const v_add = "0x2e8e1E3a095A823A541b2B0C699951c4CaAa3a74";
+  const n_add = getNftContract();
+  const v_add = getVaultContract();
   const nft_c = new web3.eth.Contract(nft_abi, n_add);
   const vault_c = new web3.eth.Contract(vault_abi, v_add);
   useEffect(() => {
