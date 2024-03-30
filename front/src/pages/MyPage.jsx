@@ -30,6 +30,7 @@ const MyPage = () => {
       if (account) {
          const accountRes = await axios.get(`${API_URL}/user?address=${account[0]}`);      
           const users = accountRes.data.users
+          console.log(users)
           setUserEgg(users[0].egg);
           setStableChicken(users[0].stable_chicken);
           setVolatileChicken(users[0].volatile_chicken);

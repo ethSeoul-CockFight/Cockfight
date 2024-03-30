@@ -9,10 +9,9 @@ const Modal = ({ isOpen, onClose, isVolatile }) => {
   const quantity = 1;
 
   const buyAPI = async (chicken) => {
-    console.log(isVolatile);
     const body = {
       address: account[0],
-      egg: 0,
+      egg: 10 * Number(chicken),
       stable_chicken: isVolatile ? 0 : Number(chicken),
       volatile_chicken: isVolatile ? Number(chicken) : 0,
       is_buy: true,
