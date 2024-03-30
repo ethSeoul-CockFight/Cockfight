@@ -19,9 +19,7 @@ const WithdrawModal = ({ isOpen, onClose, userAccount }) => {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  fetchData();
 
   return isOpen ? (
     <div className="fixed inset-0 flex items-center justify-center z-10">
