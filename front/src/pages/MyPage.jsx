@@ -30,7 +30,7 @@ const MyPage = () => {
 
   function waitTenSeconds() {
     return new Promise((resolve) => {
-      setTimeout(resolve, 10000);
+      setTimeout(resolve, 3000);
     });
   }
 
