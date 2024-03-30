@@ -7,6 +7,15 @@ export const getChikenBalance = async (account, nft_c) => {
   return response.toString();
 };
 
+export const getChickenIds = async (account, nft_c, balance) => {
+  const ids = [];
+  for (let i = 0; i < balance; i++) {
+    const response = await nft_c.methods.tokenOfOwnerByIndex(account, i).call();
+    ids.push(Number(response));
+  }
+  return ids;
+};
+
 const ALFAJORES_PARAMS = {
   chainId: "0xaef3",
   chainName: "Alfajores Testnet",
