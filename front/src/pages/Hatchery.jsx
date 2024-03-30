@@ -7,10 +7,12 @@ const Hatchery = () => {
   const { account } = useContext(AppContext);
   // 모달코드 추가
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalType, setModalType] = useState(null);
   const navigate = useNavigate();
 
-  const openModal = () => {
+  const openModal = (type) => {
     setModalOpen(true);
+    setModalType(type);
   };
   const closeModal = () => {
     setModalOpen(false);
@@ -40,7 +42,7 @@ const Hatchery = () => {
               Hatch Chicken
             </div>
           </div>
-          <button className="flex-auto" onClick={openModal}>
+          <button className="flex-auto" onClick={() => openModal('stable')}>
             <div className=" text-lg font-semibold mt-2 text-center">
               <img
                 src={`${process.env.PUBLIC_URL}/images/c_classic.png`}
@@ -50,12 +52,12 @@ const Hatchery = () => {
               <div className="text-white">Stable Chicken</div>
             </div>
           </button>
-          <Modal isOpen={modalOpen} onClose={closeModal} isVolatile={false} />
+          <Modal isOpen={modalOpen} onClose={closeModal} isVolatile={modalType === 'volatile'} />
         </div>
 
         {/* 두 번째 박스 */}
         <div className="h-1/3 flex  justify-center items-center">
-          <div className="flex-auto" onClick={openModal}>
+          <div className="flex-auto" onClick={() => openModal('volatile')}>
             <button className="text-lg font-semibold mt-2 text-center ">
               <img
                 src={`${process.env.PUBLIC_URL}/images/c_punky.png`}
@@ -65,7 +67,7 @@ const Hatchery = () => {
               <div>Volatile Chicken</div>
             </button>
           </div>
-          <Modal isOpen={modalOpen} onClose={closeModal} isVolatile={true} />
+          <Modal isOpen={modalOpen} onClose={closeModal} isVolatile={modalType === 'volatile'} />
           <div className="flex flex-col w-96 items-end justify-end ">
             <div className="text-3xl font-bold mr-3">Get Egg</div>
             <div className="text-4xl font-bold mr-3 text-red-500">Instant</div>

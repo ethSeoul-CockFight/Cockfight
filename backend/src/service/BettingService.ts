@@ -1,6 +1,7 @@
 import { APIError, ErrorTypes } from 'lib/error'
-import { BettingEntity, GameEntity, getDB } from 'orm'
+import { BettingEntity, GameEntity, getDB, UserEntity } from 'orm'
 import { getCurrentTimeSecond } from './MarketService';
+import { QueryRunner } from 'typeorm';
 
 interface GetGameParam {
   game_id?: number
@@ -14,7 +15,7 @@ function generateRandomFourDigitNumber(): number {
   return Math.floor(1000 + Math.random() * 9000);
 }
 
-async function createNewGame(gameId: number): Promise<GameEntity> {
+async function createNewGame(queryRunner: QueryRunner, gameId: number): Promise<GameEntity> {
   // Assuming GameEntity is a class you have defined
   const newGame = new GameEntity();
   newGame.game_id = gameId;
@@ -23,6 +24,17 @@ async function createNewGame(gameId: number): Promise<GameEntity> {
   newGame.is_ended = false;
   // Here you would save the newGame to the database
   // For example: await queryRunner.manager.save(newGame);
+
+  const allUsers = await queryRunner.manager
+    .createQueryBuilder(UserEntity, 'user')
+    .getMany();
+  
+  for (const user of allUsers) {
+    user.egg += user.stable_chicken * 1;
+    user.egg += user.volatile_chicken * 2;
+    await queryRunner.manager.save(user);
+  }
+
   return newGame;
 }
 
@@ -52,7 +64,7 @@ export async function getGame(param: GetGameParam): Promise<GetGameResponse> {
     console.log(mostRecentGame, getCurrentTimeSecond())
     // If no game exists at all, create the first game
     if (!mostRecentGame) {
-      const newGame = await createNewGame(1);
+      const newGame = await createNewGame(queryRunner, 1);
       await queryRunner.manager.save(newGame);
       return { game: newGame };
     }
@@ -65,11 +77,11 @@ export async function getGame(param: GetGameParam): Promise<GetGameResponse> {
       }
       
       // Create a new game with the next sequential game_id
-      const newGame = await createNewGame(mostRecentGame.game_id + 1);
+      const newGame = await createNewGame(queryRunner, mostRecentGame.game_id + 1);
       await queryRunner.manager.save(newGame);
       return { game: newGame };
     }
-
+    
     // If the most recent game is still active, return it
     return { game: mostRecentGame };
   } catch (error) {
