@@ -17,7 +17,7 @@ function LoadingPage() {
   };
 
   return (
-    <div className="Icon">
+    <div className="w-20">
       {isLoading && <LoadignIcon />}
       <button onClick={StateChange}>{isLoading ? "" : ""}</button>
     </div>
