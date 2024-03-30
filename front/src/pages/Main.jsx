@@ -11,65 +11,76 @@ import axios from "axios";
 import { API_URL } from "../utils/consts";
 
 const Main = () => {
-    const { setActiveMenu } = footerStore();
-    const { account, setAccount, web3, decimals } = useContext(AppContext);
-    const [totalChicken, setTotalChicken] = useState(0);
-    const [userChicken, setUserChicken] = useState(0);
-    const [userEgg, setUserEgg] = useState(0);
-    
+  const { setActiveMenu } = footerStore();
+  const { account, setAccount, web3, decimals } = useContext(AppContext);
+  const [totalChicken, setTotalChicken] = useState(0);
+  const [userChicken, setUserChicken] = useState(0);
+  const [userEgg, setUserEgg] = useState(0);
 
-    const navigate = useNavigate();
-    const handleStartGame = () => {
-        navigate('/lottery');
-        setActiveMenu('game');
-    };
-    
-    const fetchData = async () => {
-        try {
-            console.log('account:', account)
-            const total = await axios.get(`${API_URL}/market`);
-            const res = await axios.get(`${API_URL}/user?account=${account}`);
-            const users = res.data.users
-            setTotalChicken(total.data.total_chicken); // Assuming the response contains an eggBalance field
-            
-            if (account) {
-              setUserChicken(users[0].stable_chicken + users[0].volatile_chicken); // Assuming the response contains an eggBalance field
-              setUserEgg(users[0].egg); // Assuming the response contains an eggBalance field
-            } 
-    
-        } catch (error) {
-          console.error('Failed to fetch egg balance:', error);
-          // Handle error appropriately
-        }
-    };
+  const navigate = useNavigate();
+  const onClickAccount = async () => {
+    try {
+      const accounts = await connect();
+      if (accounts) {
+        setAccount(accounts);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleStartGame = () => {
+    navigate("/lottery");
+    setActiveMenu("game");
+  };
 
-    useEffect(() => {
-      fetchData();
-    }, []);
+  const fetchData = async () => {
+    try {
+      console.log("account:", account);
+      const total = await axios.get(`${API_URL}/market`);
+      const res = await axios.get(`${API_URL}/user?account=${account}`);
+      const users = res.data.users;
+      setTotalChicken(total.data.total_chicken); // Assuming the response contains an eggBalance field
 
-    return (
-        <BackgroundDiv>
-            <UserItems>
-                <UserItemBox>
-                    <ImageBox
-                        src={chickenImage} alt="Chicken"
-                    />
-                    <NumberBox>{userChicken ? userChicken : 0}</NumberBox>
-                </UserItemBox>
-                <UserItemBox>
-                    <ImageBox
-                        src={eggImage} alt="Egg"
-                    />
-                    <NumberBox>{userEgg ? userEgg : 0}</NumberBox>
-                </UserItemBox>
-            </UserItems>
-            <Scoreboard>
-                {new Intl.NumberFormat().format(totalChicken)}
-            </Scoreboard>
-            <Description>{`TVL(Total Value Locked): $`}{totalChicken ? totalChicken : 0}</Description>
-            <StartGameButton onClick={handleStartGame}>Start Game</StartGameButton>
-        </BackgroundDiv>
-    );
+      if (account) {
+        setUserChicken(users[0].stable_chicken + users[0].volatile_chicken); // Assuming the response contains an eggBalance field
+        setUserEgg(users[0].egg); // Assuming the response contains an eggBalance field
+      }
+    } catch (error) {
+      console.error("Failed to fetch egg balance:", error);
+      // Handle error appropriately
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  return (
+    <BackgroundDiv>
+      <UserItems>
+        <UserItemBox>
+          <ImageBox src={chickenImage} alt="Chicken" />
+          <NumberBox>{userChicken ? userChicken : 0}</NumberBox>
+        </UserItemBox>
+        <UserItemBox>
+          <ImageBox src={eggImage} alt="Egg" />
+          <NumberBox>{userEgg ? userEgg : 0}</NumberBox>
+        </UserItemBox>
+      </UserItems>
+      <Scoreboard>{new Intl.NumberFormat().format(totalChicken)}</Scoreboard>
+      <Description>
+        {`TVL(Total Value Locked): $`}
+        {totalChicken ? totalChicken : 0}
+      </Description>
+      {account ? (
+        <StartGameButton onClick={handleStartGame}>Start Game</StartGameButton>
+      ) : (
+        <StartGameButton onClick={onClickAccount}>
+          Wallet Connect
+        </StartGameButton>
+      )}
+    </BackgroundDiv>
+  );
 };
 
 export default Main;
