@@ -98,7 +98,7 @@ export async function getBetting(
     const lastBetting = await queryRunner.manager.createQueryBuilder(
       BettingEntity,
       'betting'
-    ).orderBy('betting.id', 'DESC')
+    ).orderBy('betting.game_id', 'DESC')
     .where('betting.address = :address', { address: param.address })
     .getOne()
 
@@ -116,7 +116,7 @@ interface PostBettingParam {
   address: string
   game_id: number
   position: number
-  eggs: number
+  egg: number
 }
 
 export async function postBetting(
@@ -132,12 +132,12 @@ export async function postBetting(
       .findOne({
         where: {
           address: req.address,
-          gameId: req.game_id,
+          game_id: req.game_id,
         },
       })
     
-    let egg = req.eggs
-    if (betting) egg = betting.eggs
+    let egg = req.egg
+    if (betting) egg = betting.egg
 
     await queryRunner
       .manager

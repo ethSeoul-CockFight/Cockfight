@@ -6,10 +6,10 @@ export class BettingEntity {
   address: string
 
   @PrimaryColumn('int')
-  gameId: number
+  game_id: number
 
   @Column('int')
-  eggs: number
+  egg: number
 
   @Column('int')
   position: number
