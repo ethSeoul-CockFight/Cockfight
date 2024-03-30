@@ -1,11 +1,13 @@
 import { UserEntity, YieldPlanEntity, getDB } from 'orm'
 
-interface GetMarketListResponse {
+interface GetMarketResponse {
   total_chicken: number
   total_egg: number
+  volatile_chicken_price: number
+  stable_chicken_price: number
 }
 
-export async function getMarket(): Promise<GetMarketListResponse> {
+export async function getMarket(): Promise<GetMarketResponse> {
   const [db] = getDB()
   const queryRunner = db.createQueryRunner('slave')
 
@@ -21,7 +23,9 @@ export async function getMarket(): Promise<GetMarketListResponse> {
     const totalEgg = users.reduce((acc, user) => acc + user.egg, 0)
     return {
       total_chicken: totalChicken,
-      total_egg: totalEgg
+      total_egg: totalEgg,
+      volatile_chicken_price: 1000,
+      stable_chicken_price: 1000
     }
   } finally {
     await queryRunner.release()

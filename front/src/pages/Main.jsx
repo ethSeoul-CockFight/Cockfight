@@ -20,7 +20,8 @@ const Main = () => {
   const navigate = useNavigate();
   const onClickAccount = async () => {
     try {
-      const accounts = await connect();
+      const accounts = await connect("BFC");
+      console.log(accounts);
       if (accounts) {
         setAccount(accounts);
       }

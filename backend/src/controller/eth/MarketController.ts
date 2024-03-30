@@ -13,18 +13,15 @@ export class MarketController extends KoaController {
     summary: 'Get market data',
     tags: ['Market'],
     operationId: 'getMarket',
-    request: {
-      query: z.object({
-        time: z.string().optional(),
-      }),
-    },
   })
   @Get('/market')
-  async getMarketList(ctx: Context): Promise<void> {
+  async getMarket(ctx: Context): Promise<void> {
     const markets = await getMarket()
     if (markets) success(ctx, markets)
     else error(ctx, ErrorTypes.NOT_FOUND_ERROR)
   }
+
+
 
   @routeConfig({
     method: 'get',
