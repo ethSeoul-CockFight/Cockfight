@@ -9,12 +9,18 @@ const Login = () => {
 
   const onClickAccount = async () => {
     try {
-      console.log("메마 로그인");
       const accounts = await connect(chain);
-      if(accounts){
-      setAccount(accounts);
-      navigate("/main");
+      if (accounts) {
+        setAccount(accounts);
       }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const onClickLaunch = async () => {
+    try {
+      navigate("/main");
     } catch (error) {
       console.error(error);
     }
@@ -24,7 +30,12 @@ const Login = () => {
     <div className="min-h-screen flex flex-col items-center mt-16">
       <div className="mt-24 font-bold flex flex-col w-[300px]">
         {account ? (
-          <div></div>
+          <button
+            onClick={onClickLaunch}
+            className="bg-neutral-200 text-black w-full py-4 mt-5 rounded-full hover:bg-neutral-300"
+          >
+            Launch App
+          </button>
         ) : (
           <button
             onClick={onClickAccount}

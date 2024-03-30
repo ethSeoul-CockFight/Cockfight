@@ -1,0 +1,16 @@
+[package]
+name = "cockfight"
+version = "1.0.0"
+authors = []
+
+[addresses]
+deployer = "0xb5abea7372d07bd9aeded4713ba619f95ab95d1af1e658a2e2363f2d6e2540ea"
+aptos_std = "0x1"
+aptos_framework = "0x1"
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-core.git"
+rev = "randomnet"
+subdir = "aptos-move/framework/aptos-framework"
+
+[dev-dependencies]

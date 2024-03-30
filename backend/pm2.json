@@ -1,0 +1,14 @@
+{
+  "apps" : [
+      {
+          "name" : "cockfight-backend",
+          "cwd" : ".",
+          "script" : "npm run start",
+          "watch" : true,
+          "autorestart" : true,
+          "max_memory_restart": "1000M",
+          "max_restarts": 100,
+          "exp_backoff_restart_delay": 100
+      }
+  ]
+}

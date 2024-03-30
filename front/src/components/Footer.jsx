@@ -1,13 +1,11 @@
-import React, { useContext } from 'react';
-import { RiHomeLine } from 'react-icons/ri';
+import React, { useContext } from "react";
+import { RiHomeLine } from "react-icons/ri";
 import { TbShoppingBag } from "react-icons/tb";
-import { HiOutlineHeart } from 'react-icons/hi';
 import { BiGame } from "react-icons/bi";
 import { VscDashboard } from "react-icons/vsc";
-import { GoPerson, GoScreenFull } from 'react-icons/go';
-import { Link, useNavigate } from 'react-router-dom';
-import { AppContext } from '../App';
-import styled from 'styled-components';
+import { GoPerson, GoScreenFull } from "react-icons/go";
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
 import footerStore from '../stores/footerStore';
 
 const Footer = () => {
@@ -21,18 +19,18 @@ const Footer = () => {
   };
 
   const onClickGame = () => {
-    setActiveMenu('game');
-    navigate('/lottery');
+    setActiveMenu("game");
+    navigate("/lottery");
   };
 
   const onClickList = () => {
-    setActiveMenu('dashboard');
-    navigate('/list');
+    setActiveMenu("dashboard");
+    navigate("/list");
   };
 
   const onClickMarket = () => {
-    setActiveMenu('market');
-    navigate('/market');
+    setActiveMenu("market");
+    navigate("/market");
   };
 
   const onClickMyPage = () => {
@@ -41,33 +39,33 @@ const Footer = () => {
   };
 
   return (
-    <FooterContainer >
-      <FooterButton
-        onClick={onClickHome}
-        isActive={activeMenu === 'main'}
-      >
-        <RiHomeLine size="24px" color={activeMenu === 'main' ? "#582fff" : "#4b5563"} />
+    <FooterContainer>
+      <FooterButton onClick={onClickHome} isActive={activeMenu === "main"}>
+        <RiHomeLine
+          size="24px"
+          color={activeMenu === "main" ? "#582fff" : "#4b5563"}
+        />
         <IconLabel>Home</IconLabel>
       </FooterButton>
-      <FooterButton
-        onClick={onClickGame}
-        isActive={activeMenu === 'game'}
-      >
-        <BiGame size="24px" color={activeMenu === 'game' ? "#582fff" : "#4b5563"} />
+      <FooterButton onClick={onClickGame} isActive={activeMenu === "game"}>
+        <BiGame
+          size="24px"
+          color={activeMenu === "game" ? "#582fff" : "#4b5563"}
+        />
         <IconLabel>Games</IconLabel>
       </FooterButton>
-      <FooterButton
-        onClick={onClickMarket}
-        isActive={activeMenu === 'market'}
-      >
-        <TbShoppingBag size="24px" color={activeMenu === 'market' ? "#582fff" : "#4b5563"} />
+      <FooterButton onClick={onClickMarket} isActive={activeMenu === "market"}>
+        <TbShoppingBag
+          size="24px"
+          color={activeMenu === "market" ? "#582fff" : "#4b5563"}
+        />
         <IconLabel>Market</IconLabel>
       </FooterButton>
-      <FooterButton
-        onClick={onClickList}
-        isActive={activeMenu === 'dashboard'}
-      >
-        <VscDashboard size="24px" color={activeMenu === 'dashboard' ? "#582fff" : "#4b5563"} />
+      <FooterButton onClick={onClickList} isActive={activeMenu === "dashboard"}>
+        <VscDashboard
+          size="24px"
+          color={activeMenu === "dashboard" ? "#582fff" : "#4b5563"}
+        />
         <IconLabel>Dash board</IconLabel>
       </FooterButton>
       <FooterButton
@@ -105,7 +103,8 @@ const FooterButton = styled.button`
     isActive ?
       `
     #582fff
-  ` : `#4b5563`};
+  `
+      : `#4b5563`};
   &:hover {
     background-color: #f3f4f6;
   }
