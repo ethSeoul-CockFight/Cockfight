@@ -9,6 +9,7 @@ import { formatAmount, truncate } from "../utils/helpper";
 import { getNativeBalance, getChikenBalance } from "../evmInteraction/connect";
 import { API_URL } from "../utils/consts";
 import WithdrawModal from "../components/WithdrawModal";
+import { getFaucet } from "../web3config/chain";
 
 const MyPage = () => {
   const { account, web3, decimals, nft_c } = useContext(AppContext);
@@ -20,6 +21,7 @@ const MyPage = () => {
   const [userEgg, setUserEgg] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
+  const faucet = getFaucet();
 
   const fetchData = async () => {
     try {
@@ -52,7 +54,8 @@ const MyPage = () => {
   const onClickFaucet = async () => {
     try {
       setIsFaucetLoading(true);
-      await getNativeBalance(web3, account);
+      console.log(faucet);
+      window.open(faucet, "_blank");
     } catch (error) {
       console.error(error);
     }
