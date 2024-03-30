@@ -9,7 +9,6 @@ import styled from "styled-components";
 import footerStore from '../stores/footerStore';
 
 const Footer = () => {
-  const { account, setAccount } = useContext(AppContext);
   const { activeMenu, setActiveMenu } = footerStore();
   const navigate = useNavigate();
 
