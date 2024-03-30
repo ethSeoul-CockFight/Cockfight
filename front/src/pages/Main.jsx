@@ -1,115 +1,128 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import footerStore from "../stores/footerStore";
 import backgroundImage from "../images/chicken.jpg";
 import chickenImage from "../images/c_classic.png";
 import eggImage from "../images/egg.png";
 import { AppContext } from "../App";
-import axios from 'axios';
+import { connect } from "../evmInteraction/connect";
+import axios from "axios";
 import { API_URL } from "../utils/consts";
 
 const Main = () => {
-    const { setActiveMenu } = footerStore();
-    const { account, setAccount, web3, decimals } = useContext(AppContext);
-    const [chicken, setChicken] = useState(0);
+  const { setActiveMenu } = footerStore();
+  const { account, setAccount, web3, decimals, chain } = useContext(AppContext);
+  const [chicken, setChicken] = useState(0);
 
-    const navigate = useNavigate();
-    const handleStartGame = () => {
-        navigate('/lottery');
-        setActiveMenu('game');
-    };
-    
-    const fetchChicken = async () => {
-        try {
-            const response = await axios.get(`${API_URL}/market`);
-            console.log(response)
-            // setChicken(response.data.eggBalance); // Assuming the response contains an eggBalance field
-        } catch (error) {
-          console.error('Failed to fetch egg balance:', error);
-          // Handle error appropriately
-        }
-    };
+  const navigate = useNavigate();
+  const onClickAccount = async () => {
+    try {
+      const accounts = await connect(chain);
+      if (accounts) {
+        setAccount(accounts);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleStartGame = () => {
+    navigate("/lottery");
+    setActiveMenu("game");
+  };
 
-    useEffect(() => {
-        fetchChicken();
-    }, []);
+  const fetchChicken = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/market`);
+      console.log(response);
+      // setChicken(response.data.eggBalance); // Assuming the response contains an eggBalance field
+    } catch (error) {
+      console.error("Failed to fetch egg balance:", error);
+      // Handle error appropriately
+    }
+  };
 
-    const outDTOdata = undefined; //back에서 받아와야하는 데이터
-    const number = 103256789; //chkicken 수
+  useEffect(() => {
+    fetchChicken();
+  }, []);
 
-    return (
-        <BackgroundDiv>
-            <UserItems>
-                <UserItemBox>
-                    <ImageBox
-                        src={chickenImage} alt="Chicken"
-                    />
-                    <NumberBox>{outDTOdata ? outDTOdata : 3}</NumberBox>
-                </UserItemBox>
-                <UserItemBox>
-                    <ImageBox
-                        src={eggImage} alt="Egg"
-                    />
-                    <NumberBox>{outDTOdata ? outDTOdata : 60}</NumberBox>
-                </UserItemBox>
-            </UserItems>
-            <Scoreboard>
-                {new Intl.NumberFormat().format(number)}
-            </Scoreboard>
-            <Description>{`TVL(Total Value Locked): $`}{outDTOdata ? outDTOdata : 253532}</Description>
-            <StartGameButton onClick={handleStartGame}>Start Game</StartGameButton>
-        </BackgroundDiv>
-    );
+  const outDTOdata = undefined; //back에서 받아와야하는 데이터
+  const number = 103256789; //chkicken 수
+
+  return (
+    <BackgroundDiv>
+      <UserItems>
+        <UserItemBox>
+          <ImageBox src={chickenImage} alt="Chicken" />
+          <NumberBox>{outDTOdata ? outDTOdata : 3}</NumberBox>
+        </UserItemBox>
+        <UserItemBox>
+          <ImageBox src={eggImage} alt="Egg" />
+          <NumberBox>{outDTOdata ? outDTOdata : 60}</NumberBox>
+        </UserItemBox>
+      </UserItems>
+      <Scoreboard>{new Intl.NumberFormat().format(number)}</Scoreboard>
+      <Description>
+        {`TVL(Total Value Locked): $`}
+        {outDTOdata ? outDTOdata : 253532}
+      </Description>
+      {account ? (
+        <StartGameButton onClick={handleStartGame}>Start Game</StartGameButton>
+      ) : (
+        <StartGameButton onClick={onClickAccount}>
+          Wallet Connect
+        </StartGameButton>
+      )}
+    </BackgroundDiv>
+  );
 };
 
 export default Main;
 
 const BackgroundDiv = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    background-image: url(${backgroundImage});
-    background-size: cover;
-    background-position: cover;
-    justify-content: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  background-image: url(${backgroundImage});
+  background-size: cover;
+  background-position: cover;
+  justify-content: start;
 `;
 
 const UserItems = styled.div`
-margin: 17px 0;
-height: 60px;
-width: 100%;
-display: flex;
-justify-content: space-around;
+  margin: 70px 0;
+  height: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
 `;
 
 const UserItemBox = styled.div`
-
-width: 157px;
-height: 56px;
-background-color: #bdbdbd;
-border-radius: 8px;
-display: flex;
-justify-content: space-around;
-align-items: center;
-padding: 16px 18px 16px 18px;
+  width: 157px;
+  height: 56px;
+  background-color: #bdbdbd;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 16px 18px 16px 18px;
 `;
 
 const ImageBox = styled.img`
-width:46px;
-height: 44px;
-background-color: white;
-border-radius: 50%;
-object-fit: cover;
+  width: 46px;
+  height: 44px;
+  background-color: white;
+  border-radius: 50%;
+  object-fit: cover;
 `;
 
 const NumberBox = styled.div`
-font-family: "Inter";
-font-weight: 700;
-font-size: 30px;
-color: #000000;
+  font-family: "Inter";
+  font-weight: 700;
+  font-size: 30px;
+  color: #000000;
 `;
 
 const Scoreboard = styled.div`
@@ -133,9 +146,9 @@ const Description = styled.div`
 `;
 
 const StartGameButton = styled.button`
-margin-top: 120px;
-margin-left: auto;
-margin-right: 20px;
+  margin-top: 120px;
+  margin-left: auto;
+  margin-right: 20px;
   background-color: #ff2222;
   color: #ffffff;
   font-size: 20px;

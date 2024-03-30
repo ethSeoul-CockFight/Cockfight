@@ -43,10 +43,8 @@ function App() {
       >
         <BrowserRouter>
           <div className="iphone">
-            <StatusBar />
             <Routes>
               <Route path="/" element={<Welcome />} />
-              <Route path="/login" element={<Login />} />
               <Route path="/main" element={<Main />} />
               <Route path="/my-page" element={<MyPage />} />
               <Route path="/list" element={<List />} />
@@ -54,7 +52,6 @@ function App() {
               <Route path="/lottery" element={<Lottery />} />
               <Route path="/write-lottery" element={<WriteLottery />} />
               <Route path="/buy-lottery" element={<BuyLottery />} />
-              {/* <Route path="/adminpage" element={<AdminPage />} /> */}
             </Routes>
             {account && <Footer />}
           </div>
