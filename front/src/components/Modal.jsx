@@ -1,12 +1,12 @@
 import React, { useContext, useState } from "react";
 import { buyContract } from "../evmInteraction/buyChickens.jsx";
 import { AppContext } from "../App.jsx";
-import axios from 'axios';
+import axios from "axios";
 import { API_URL } from "../utils/consts.js";
 
 const Modal = ({ isOpen, onClose, isVolatile }) => {
-  const { account, nft_c, decimals, chain } = useContext(AppContext);
-  const [quantity, setQuantity] = useState(0); 
+  const { account, vault_c, decimals } = useContext(AppContext);
+  const [quantity, setQuantity] = useState(0);
 
   const buyAPI = async (chicken) => {
     const body = {
@@ -18,10 +18,10 @@ const Modal = ({ isOpen, onClose, isVolatile }) => {
     };
     try {
       const response = await axios.post(`${API_URL}/market/trade`, body);
-      console.log('Buy response:', response.data);
+      console.log("Buy response:", response.data);
       // Handle the response as needed
     } catch (error) {
-      console.error('Failed to perform buy operation:', error);
+      console.error("Failed to perform buy operation:", error);
       // Handle error appropriately
     }
   };
@@ -36,15 +36,15 @@ const Modal = ({ isOpen, onClose, isVolatile }) => {
     };
     try {
       const response = await axios.post(`${API_URL}/market/trade`, body);
-      console.log('Sell response:', response.data);
+      console.log("Sell response:", response.data);
     } catch (error) {
-      console.error('Failed to fetch egg balance:', error);
+      console.error("Failed to fetch egg balance:", error);
       // Handle error appropriately
     }
   };
 
   const buyChickens = async () => {
-    await buyContract(chain, account, nft_c, decimals);
+    await buyContract(account, vault_c, decimals);
     await buyAPI(quantity);
     onClose();
   };
@@ -57,7 +57,8 @@ const Modal = ({ isOpen, onClose, isVolatile }) => {
 
   const handleQuantityChange = (e) => {
     const value = parseInt(e.target.value, 10);
-    if (!isNaN(value) && value >= 0) { // Ensure the value is a number and not negative
+    if (!isNaN(value) && value >= 0) {
+      // Ensure the value is a number and not negative
       setQuantity(value);
     }
   };

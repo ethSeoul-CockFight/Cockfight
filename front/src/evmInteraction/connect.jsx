@@ -1,5 +1,5 @@
-export const connect = async (chain) => {
-  if (chain == "BFC") return connect_tbfc();
+export const connect = async () => {
+  return await connect_celo();
 };
 
 export const getChikenBalance = async (account, nft_c) => {
@@ -7,9 +7,31 @@ export const getChikenBalance = async (account, nft_c) => {
   return response;
 };
 
+const ALFAJORES_PARAMS = {
+  chainId: "0xaef3",
+  chainName: "Alfajores Testnet",
+  nativeCurrency: { name: "Alfajores Celo", symbol: "A-CELO", decimals: 18 },
+  rpcUrls: ["https://alfajores-forno.celo-testnet.org"],
+  blockExplorerUrls: ["https://alfajores-blockscout.celo-testnet.org/"],
+  iconUrls: ["future"],
+};
+
 export const getNativeBalance = async (web3, account) => {
   const response = await web3.eth.getBalance(account[0]);
   return response;
+};
+
+const connect_celo = async () => {
+  try {
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    await window.ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [ALFAJORES_PARAMS],
+    });
+    return accounts;
+  } catch (error) {}
 };
 
 const connect_tbfc = async () => {
