@@ -48,12 +48,12 @@ function App() {
               <Route path="/" element={<Welcome />} />
               <Route path="/login" element={<Login />} />
               <Route path="/main" element={<Main />} />
-              <Route path="/myPage" element={<MyPage />} />
+              <Route path="/my-page" element={<MyPage />} />
               <Route path="/list" element={<List />} />
               <Route path="/market" element={<Market />} />
               <Route path="/lottery" element={<Lottery />} />
-              <Route path="/writelottery" element={<WriteLottery />} />
-              <Route path="/buylottery" element={<BuyLottery />} />
+              <Route path="/write-lottery" element={<WriteLottery />} />
+              <Route path="/buy-lottery" element={<BuyLottery />} />
               {/* <Route path="/adminpage" element={<AdminPage />} /> */}
             </Routes>
             {account && <Footer />}
