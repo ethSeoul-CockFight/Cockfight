@@ -33,12 +33,6 @@ const Main = () => {
     setActiveMenu('game');
   };
 
-  useEffect(() => {
-    if (!account) {
-      navigate('/main');
-    }
-  }, []);
-
   const fetchData = async () => {
     try {
       if (account) {

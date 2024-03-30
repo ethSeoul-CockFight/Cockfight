@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
-import styled, {css, createGlobalStyle} from 'styled-components';
+import styled, { css, createGlobalStyle } from 'styled-components';
 import { AppContext } from '../App';
 import { API_URL } from '../utils/consts';
-import axios from "axios";
+import axios from 'axios';
 import { bettingAPI, buyAPI } from '../utils/api';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from 'react-router-dom';
 import { connect } from '../evmInteraction/connect';
 
 const LotteryContainer = styled.div`
-  background-color: #FFEBF2; /* Soft pink background */
+  background-color: #ffebf2; /* Soft pink background */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -17,11 +17,10 @@ const LotteryContainer = styled.div`
   font-family: 'Poppins', sans-serif;
 `;
 
-
 const Input = styled.input`
   padding: 10px;
   margin: 10px 0;
-  border: 2px solid #FFC0CB; /* Light pink border */
+  border: 2px solid #ffc0cb; /* Light pink border */
   border-radius: 20px; /* Rounded edges */
   width: 250px;
   text-align: center;
@@ -32,7 +31,7 @@ const Input = styled.input`
 const SubmitButton = styled.button`
   padding: 10px 20px;
   border: none;
-  background-color: #FF69B4; /* Brighter pink for the button */
+  background-color: #ff69b4; /* Brighter pink for the button */
   color: white;
   border-radius: 20px; /* Rounded edges for the button */
   cursor: pointer;
@@ -41,7 +40,7 @@ const SubmitButton = styled.button`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   transition: background-color 0.2s, transform 0.1s;
   &:hover {
-    background-color: #FF1493; /* Darker pink on hover */
+    background-color: #ff1493; /* Darker pink on hover */
     transform: translateY(-2px); /* Slight raise effect */
   }
   &:active {
@@ -54,7 +53,10 @@ const Result = styled.div`
   padding: 15px;
   border-radius: 20px; /* Rounded edges for the result box */
   color: #fff;
-  background-color: ${props => props.isSuccess ? '#98FB98' : '#FFB6C1'}; /* Success in light green, failure in light pink */
+  background-color: ${(props) =>
+    props.isSuccess
+      ? '#98FB98'
+      : '#FFB6C1'}; /* Success in light green, failure in light pink */
   font-size: 18px;
   font-family: 'Poppins', sans-serif;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
@@ -67,7 +69,7 @@ const DigitContainer = styled.div`
   width: 60px;
   height: 60px;
   border-radius: 50%; /* Perfect circle */
-  background-color: #FFC0CB; /* Light pink background */
+  background-color: #ffc0cb; /* Light pink background */
   color: white;
   font-size: 24px;
   margin: 5px;
@@ -79,7 +81,7 @@ const CountdownContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #FFC0CB; /* Light pink to match the theme */
+  background-color: #ffc0cb; /* Light pink to match the theme */
   color: white;
   padding: 10px 20px;
   margin-top: 20px;
@@ -90,7 +92,7 @@ const CountdownContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  background: -webkit-linear-gradient(45deg, #FF69B4, #FFC0CB);
+  background: -webkit-linear-gradient(45deg, #ff69b4, #ffc0cb);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-size: 2.5rem;
@@ -105,7 +107,7 @@ const BettingButton = styled.button`
   padding: 10px 20px;
   margin: 5px; /* Slight separation between buttons */
   border: none;
-  background-color: #FFB6C1; /* Slightly lighter pink */
+  background-color: #ffb6c1; /* Slightly lighter pink */
   color: white;
   border-radius: 20px;
   cursor: pointer;
@@ -115,7 +117,7 @@ const BettingButton = styled.button`
   transition: background-color 0.2s, transform 0.1s;
 
   &:hover {
-    background-color: #FF1493; /* Darker pink on hover */
+    background-color: #ff1493; /* Darker pink on hover */
     transform: translateY(-2px); /* Slight raise effect */
   }
   &:active {
@@ -128,19 +130,27 @@ const WaitingMessage = styled.div`
   padding: 20px;
   border-radius: 20px;
   color: white;
-  background: linear-gradient(45deg, #FF69B4, #FFC0CB); /* Harmonizing with the Title component */
+  background: linear-gradient(
+    45deg,
+    #ff69b4,
+    #ffc0cb
+  ); /* Harmonizing with the Title component */
   font-size: 18px;
   font-family: 'Poppins', sans-serif;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
   white-space: pre-wrap; /* Ensures text wrapping and respects newline characters */
   max-width: 80%; /* Optimal width for readability */
-  border: 2px solid #FFC0CB; /* Light pink border to blend with the gradient */
+  border: 2px solid #ffc0cb; /* Light pink border to blend with the gradient */
   transition: transform 0.2s, background-color 0.2s; /* Smooth transition for hover effect */
 
   &:hover {
     transform: translateY(-2px); /* Slight elevation on hover */
-    background: linear-gradient(45deg, #FF1493, #FF69B4); /* Slightly darker gradient on hover for interaction feedback */
+    background: linear-gradient(
+      45deg,
+      #ff1493,
+      #ff69b4
+    ); /* Slightly darker gradient on hover for interaction feedback */
   }
 `;
 
@@ -148,7 +158,7 @@ const BettingStatusMessage = styled.div`
   margin-top: 20px;
   padding: 20px;
   border-radius: 20px;
-  background-color: #FFC0CB; /* Light pink background to match the theme */
+  background-color: #ffc0cb; /* Light pink background to match the theme */
   color: white;
   font-size: 18px;
   font-family: 'Poppins', sans-serif;
@@ -164,7 +174,7 @@ const SuccessModal = styled.div`
   width: 300px;
   padding: 20px;
   background-color: white;
-  border: 2px solid #4CAF50;
+  border: 2px solid #4caf50;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   text-align: center;
@@ -181,14 +191,12 @@ const ModalBackdrop = styled.div`
   z-index: 999; // Behind the modal, but above other content
 `;
 
-
-
 const Lottery = () => {
   const [entry, setEntry] = useState('');
   const [lotteryResult, setLotteryResult] = useState(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const { account, setAccount, chain, web3, decimals } = useContext(AppContext);
-  const [countdown, setCountdown] = useState("00:00:00");
+  const [countdown, setCountdown] = useState('00:00:00');
   const [targetDate, setTargetDate] = useState(0);
   const [betAmount, setBetAmount] = useState(0);
   const [hasCountdownFinished, setHasCountdownFinished] = useState(false);
@@ -197,31 +205,38 @@ const Lottery = () => {
   const [mostRecentGame, setMostRecentGame] = useState({});
   const [userRecentBetting, setUserRecentBetting] = useState({});
   const [winNumber, setWinNumber] = useState(1599);
+  const navigate = useNavigate();
   const handleBet = (amount) => {
     setBetAmount(amount);
     // Additional logic for placing a bet...
   };
-  
-  
+
+  useEffect(() => {
+    if (!account) {
+      navigate('/main');
+    }
+  }, []);
+
   const fetchData = async () => {
     try {
-      
       const mostRecentGame = await axios.get(`${API_URL}/game`);
-      const endTime = Number(mostRecentGame.data.game.end_time) * 1000
+      const endTime = Number(mostRecentGame.data.game.end_time) * 1000;
       setMostRecentGame({
         game_id: mostRecentGame.data.game.game_id,
         winner_position: mostRecentGame.data.game.winner_position,
         end_time: Number(mostRecentGame.data.game.end_time) * 1000,
-        is_ended: mostRecentGame.data.game.is_ended
+        is_ended: mostRecentGame.data.game.is_ended,
       });
       setTargetDate(endTime);
       if (account) {
-        const accountRes = await axios.get(`${API_URL}/user?address=${account[0]}`);      
-        const users = accountRes.data.users
+        const accountRes = await axios.get(
+          `${API_URL}/user?address=${account[0]}`,
+        );
+        const users = accountRes.data.users;
         setUserEgg(users[0].egg); // Assuming the response contains an eggBalance field
       }
     } catch (error) {
-      console.error("Failed to on fetch data:", error);
+      console.error('Failed to on fetch data:', error);
       // Handle error appropriately
     }
   };
@@ -231,11 +246,15 @@ const Lottery = () => {
     const now = new Date().getTime();
     const distance = targetDate - now;
 
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const hours = Math.floor(
+      (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+    );
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    return `${hours.toString().padStart(2, '0')}:${minutes
+      .toString()
+      .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
 
   const handleChange = (e) => {
@@ -243,145 +262,148 @@ const Lottery = () => {
     setEntry(value.slice(0, 4));
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (hasSubmitted) {
       alert("You've already submitted your bet!");
       return;
     }
     if (betAmount === 0) {
-      alert("Please select a bet amount!");
+      alert('Please select a bet amount!');
       return;
     }
     if (userEgg < betAmount) {
-      alert("Not enough eggs!");
+      alert('Not enough eggs!');
       return;
     }
-    if (!entry){
-      alert("Please enter a number!");
+    if (!entry) {
+      alert('Please enter a number!');
       return;
     }
     if (!account) {
-      alert("Please connect your wallet!");
+      alert('Please connect your wallet!');
       await connect(chain);
       return;
     }
-    if (mostRecentGame.is_ended || userRecentBetting.game_id === mostRecentGame.game_id) {
+    if (
+      mostRecentGame.is_ended ||
+      userRecentBetting.game_id === mostRecentGame.game_id
+    ) {
       window.location.reload();
-      return
+      return;
     }
 
     setUserRecentBetting({
       game_id: mostRecentGame.game_id,
       amount: betAmount,
-      position: entry
-    })
-    
+      position: entry,
+    });
+
     const bettingBody = {
       address: account[0],
       game_id: mostRecentGame.game_id,
       egg: betAmount,
-      position: entry
+      position: entry,
     };
 
     bettingAPI(account, betAmount, bettingBody);
 
-
     setHasSubmitted(true); // Disable further submissions
   };
 
-
   const handlePreviousBetting = async () => {
-    try{
+    try {
       const didWin = entry === winNumber;
       setIsSuccess(didWin);
-      setLotteryResult(didWin ? "Congratulations! You've won!" : "Sorry, better luck next time!");
+      setLotteryResult(
+        didWin
+          ? "Congratulations! You've won!"
+          : 'Sorry, better luck next time!',
+      );
     } catch (error) {
-      console.error("Failed on lottery:");
+      console.error('Failed on lottery:');
     }
-  }
-  
+  };
+
   useEffect(() => {
-    if (hasCountdownFinished){
+    if (hasCountdownFinished) {
       handlePreviousBetting();
       setHasSubmitted(false);
     }
-  }, [hasCountdownFinished])
+  }, [hasCountdownFinished]);
 
   useEffect(() => {
     fetchData();
   }, []);
-
 
   useEffect(() => {
     if (targetDate) {
       const timer = setInterval(() => {
         const newCountdown = calculateCountdown();
         setCountdown(newCountdown);
-        
 
         const now = new Date().getTime();
         if (targetDate <= now) {
-          handlePreviousBetting()
+          handlePreviousBetting();
           setHasCountdownFinished(true);
           clearInterval(timer); // Stop the timer once the countdown is finished
         }
       }, 1000);
-  
+
       return () => clearInterval(timer);
     }
   }, [targetDate]);
 
   return (
     <>
-    <LotteryContainer>
-      {hasSubmitted && (
-        <>
-          <ModalBackdrop onClick={() => setHasSubmitted(false)} />
-          <SuccessModal>
-            Your Betting Submitted!
-            {/* <button onClick={() => setHasSubmitted(false)}>Close</button> */}
-          </SuccessModal>
-        </>
-      )}
-      <Title>Lottery</Title>
-      <form onSubmit={handleSubmit}>
-        <Input
-          type="number"
-          value={entry}
-          onChange={handleChange}
-          placeholder="Enter a 4-digit number"
-          maxLength="4"
-        />
-        <SubmitButton type="submit" disabled={hasSubmitted}>Submit</SubmitButton>
-      </form>
-      
-      <div>
-        <BettingButton onClick={() => handleBet(1)}>1</BettingButton>
-        <BettingButton onClick={() => handleBet(5)}>5</BettingButton>
-        <BettingButton onClick={() => handleBet(10)}>10</BettingButton>
-      </div>
-      {hasSubmitted ? (
-        lotteryResult && (
-          <Result isSuccess={isSuccess}>
-            {lotteryResult}
-            <div>
-              {entry.split('').map((digit, index) => (
-                <DigitContainer key={index}>{digit}</DigitContainer>
-              ))}
-            </div>
-          </Result>
-        )
-      ) : (
-        <WaitingMessage>
-          {`You have ${userEgg} eggs \nYou Bet ${entry} with ${betAmount} eggs! \nPlease wait until the draw...`}
-        </WaitingMessage>
-      )}
-      <CountdownContainer>
-        Countdown to Draw: {countdown}
-      </CountdownContainer>
-    </LotteryContainer>
+      <LotteryContainer>
+        {hasSubmitted && (
+          <>
+            <ModalBackdrop onClick={() => setHasSubmitted(false)} />
+            <SuccessModal>
+              Your Betting Submitted!
+              {/* <button onClick={() => setHasSubmitted(false)}>Close</button> */}
+            </SuccessModal>
+          </>
+        )}
+        <Title>Lottery</Title>
+        <form onSubmit={handleSubmit}>
+          <Input
+            type="number"
+            value={entry}
+            onChange={handleChange}
+            placeholder="Enter a 4-digit number"
+            maxLength="4"
+          />
+          <SubmitButton type="submit" disabled={hasSubmitted}>
+            Submit
+          </SubmitButton>
+        </form>
+
+        <div>
+          <BettingButton onClick={() => handleBet(1)}>1</BettingButton>
+          <BettingButton onClick={() => handleBet(5)}>5</BettingButton>
+          <BettingButton onClick={() => handleBet(10)}>10</BettingButton>
+        </div>
+        {hasSubmitted ? (
+          lotteryResult && (
+            <Result isSuccess={isSuccess}>
+              {lotteryResult}
+              <div>
+                {entry.split('').map((digit, index) => (
+                  <DigitContainer key={index}>{digit}</DigitContainer>
+                ))}
+              </div>
+            </Result>
+          )
+        ) : (
+          <WaitingMessage>
+            {`You have ${userEgg} eggs \nYou Bet ${entry} with ${betAmount} eggs! \nPlease wait until the draw...`}
+          </WaitingMessage>
+        )}
+        <CountdownContainer>Countdown to Draw: {countdown}</CountdownContainer>
+      </LotteryContainer>
     </>
   );
 };
