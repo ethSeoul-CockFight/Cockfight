@@ -42,7 +42,7 @@ function App() {
         }}
       >
         <BrowserRouter>
-          <div className="iphone sm:max-w-sm lg:max-w-lg">
+          <div className="w-full h-full sm:w-[390px] sm:h-[752px] overflow-hidden sm:rounded-[50px] relative shadow-md flex flex-col justify-between flex-1 z-10 sm:shadow-[10px_10px_50px_rgba(0,0,0,0.4)]">
             <Routes>
               <Route path="/" element={<Welcome />} />
               <Route path="/login" element={<Login />} />
