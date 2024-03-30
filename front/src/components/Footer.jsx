@@ -6,13 +6,14 @@ import { VscDashboard } from "react-icons/vsc";
 import { GoPerson, GoScreenFull } from "react-icons/go";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import footerStore from '../stores/footerStore';
 
 const Footer = () => {
-  const [activeMenu, setActiveMenu] = React.useState("main");
+  const { activeMenu, setActiveMenu } = footerStore();
   const navigate = useNavigate();
 
   const onClickHome = () => {
-    setActiveMenu("main");
+    setActiveMenu('main');
     navigate(`/main`);
   };
 
@@ -98,8 +99,8 @@ const FooterButton = styled.button`
   justify-content: center;
   align-items: center;
   color: ${({ isActive }) =>
-    isActive
-      ? `
+    isActive ?
+      `
     #582fff
   `
       : `#4b5563`};
@@ -113,7 +114,7 @@ const FooterButton = styled.button`
 
 const IconLabel = styled.div`
   font-size: 10px;
-  weight: 400;
+  font-weight: 400;
   text-align: center;
   margin-top: 4px;
 `;
