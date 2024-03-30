@@ -1,94 +1,139 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import footerStore from "../stores/footerStore";
 import backgroundImage from "../images/chicken.jpg";
 import chickenImage from "../images/c_classic.png";
 import eggImage from "../images/egg.png";
+import { AppContext } from "../App";
+import { connect, getChikenBalance } from "../evmInteraction/connect";
+import axios from "axios";
+import { API_URL } from "../utils/consts";
 
 const Main = () => {
-    const { setActiveMenu } = footerStore();
-    const navigate = useNavigate();
-    const handleMoveToGames = () => {
-        navigate('/games');
-        setActiveMenu('game');
-    };
-    const outDTOdata = undefined; //back에서 받아와야하는 데이터
-    const number = 103256789; //chkicken 수
+  const { setActiveMenu } = footerStore();
+  const { account, setAccount, web3, decimals, nft_c } = useContext(AppContext);
+  const [totalChicken, setTotalChicken] = useState(0);
+  const [userChicken, setUserChicken] = useState(0);
+  const [userEgg, setUserEgg] = useState(0);
 
-    return (
-        <BackgroundDiv>
-            <UserItems>
-                <UserItemBox>
-                    <ImageBox
-                        src={chickenImage} alt="Chicken"
-                    />
-                    <NumberBox>{outDTOdata ? outDTOdata : 3}</NumberBox>
-                </UserItemBox>
-                <UserItemBox>
-                    <ImageBox
-                        src={eggImage} alt="Egg"
-                    />
-                    <NumberBox>{outDTOdata ? outDTOdata : 60}</NumberBox>
-                </UserItemBox>
-            </UserItems>
-            <Description>Total chickens</Description>
-            <Scoreboard>
-                {new Intl.NumberFormat().format(number)}
-            </Scoreboard>
-            <Description>{`TVL(Total Value Locked): $`}{outDTOdata ? outDTOdata : 253532}</Description>
-            <StartGameButton onClick={handleMoveToGames}>Start Game</StartGameButton>
-        </BackgroundDiv>
-    );
+  const navigate = useNavigate();
+  const onClickAccount = async () => {
+    try {
+      const accounts = await connect();
+      if (accounts) {
+        setAccount(accounts);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleMoveToGames = () => {
+    navigate("/games");
+    setActiveMenu("game");
+  };
+
+  useEffect(() => {
+    if (!account) {
+      navigate("/main");
+    }
+  }, []);
+  const fetchData = async () => {
+    try {
+      if (account) {
+        setUserChicken(Number(await getChikenBalance(account, nft_c))); // Assuming the response contains an eggBalance field
+        setUserEgg(users[0].egg); // Assuming the response contains an eggBalance field
+      }
+
+      const total = await axios.get(`${API_URL}/market`);
+      const res = await axios.get(`${API_URL}/user?account=${account}`);
+      const users = res.data.users;
+      setTotalChicken(total.data.total_chicken); // Assuming the response contains an eggBalance field
+    } catch (error) {
+      console.error("Failed to fetch egg balance:", error);
+      // Handle error appropriately
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [account]);
+
+  return (
+    <BackgroundDiv>
+      <UserItems>
+        <UserItemBox>
+          <ImageBox src={chickenImage} alt="Chicken" />
+          <NumberBox>{userChicken ? userChicken : 0}</NumberBox>
+        </UserItemBox>
+        <UserItemBox>
+          <ImageBox src={eggImage} alt="Egg" />
+          <NumberBox>{userEgg ? userEgg : 0}</NumberBox>
+        </UserItemBox>
+      </UserItems>
+      <Description>Total chickens</Description>
+      <Scoreboard>{new Intl.NumberFormat().format(totalChicken)}</Scoreboard>
+      <Description>
+        {`TVL(Total Value Locked): $`}
+        {totalChicken ? totalChicken : 0}
+      </Description>
+      {account ? (
+        <StartGameButton onClick={handleMoveToGames}>Start Game</StartGameButton>
+      ) : (
+        <StartGameButton onClick={onClickAccount}>
+          Wallet Connect
+        </StartGameButton>
+      )}
+    </BackgroundDiv>
+  );
 };
 
 export default Main;
 
 const BackgroundDiv = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    background-image: url(${backgroundImage});
-    background-size: cover;
-    background-position: cover;
-    justify-content: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  background-image: url(${backgroundImage});
+  background-size: cover;
+  background-position: cover;
+  justify-content: start;
 `;
 
 const UserItems = styled.div`
-margin: 17px 0;
-height: 60px;
-width: 100%;
-display: flex;
-justify-content: space-around;
+  margin: 70px 0;
+  height: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
 `;
 
 const UserItemBox = styled.div`
-
-width: 157px;
-height: 56px;
-background-color: #bdbdbd;
-border-radius: 8px;
-display: flex;
-justify-content: space-around;
-align-items: center;
-padding: 16px 18px 16px 18px;
+  width: 157px;
+  height: 56px;
+  background-color: #bdbdbd;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 16px 18px 16px 18px;
 `;
 
 const ImageBox = styled.img`
-width:46px;
-height: 44px;
-background-color: white;
-border-radius: 50%;
-object-fit: cover;
+  width: 46px;
+  height: 44px;
+  background-color: white;
+  border-radius: 50%;
+  object-fit: cover;
 `;
 
 const NumberBox = styled.div`
-font-family: "Inter";
-font-weight: 700;
-font-size: 30px;
-color: #000000;
+  font-family: "Inter";
+  font-weight: 700;
+  font-size: 30px;
+  color: #000000;
 `;
 
 const Scoreboard = styled.div`
@@ -112,9 +157,9 @@ const Description = styled.div`
 `;
 
 const StartGameButton = styled.button`
-margin-top: 120px;
-margin-left: auto;
-margin-right: 20px;
+  margin-top: 120px;
+  margin-left: auto;
+  margin-right: 20px;
   background-color: #ff2222;
   color: #ffffff;
   font-size: 20px;
