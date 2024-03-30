@@ -10,7 +10,7 @@ const ChikenBox = ({ tokenId, price }) => {
     await buyUser(account, vault_c, tokenId, price);
   };
   return (
-    <div className="flex items-center justify-between p-4 shadow-md rounded-lg">
+    <div className="flex items-center justify-between p-4 h-40 shadow-md rounded-lg">
       <div className="flex items-center justify-center">
         {/* 상품 이미지와 정보를 가운데 정렬 */}
         <img
@@ -25,10 +25,10 @@ const ChikenBox = ({ tokenId, price }) => {
         <div className="ml-3">{formatAmount(price, 14)} USDC</div>
       </div>
       <button
-        className="bg-blue-500 text-white px-4 py-2 rounded-md"
+        className="bg-red-500 text-white px-4 py-2 rounded-md"
         onClick={onClickUserBuyChicken}
       >
-        구매
+        Buy
       </button>
     </div>
   );

@@ -14,7 +14,6 @@ const Market = () => {
   const getSellingData = async () => {
     const response = await getSellingList(vault_c);
     setSellList(response);
-    console.log(response);
     setIsLoading(false);
   };
 
@@ -50,6 +49,3 @@ const Market = () => {
 };
 
 export default Market;
-
-// 판매 리스트, getsellingchikens(tokenID, price)
-// 구매하기, - buychkien
