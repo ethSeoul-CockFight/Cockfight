@@ -22,7 +22,7 @@ const ChikenBox = ({ tokenId, price, check, setCheck }) => {
             className="rounded-full h-16 w-16"
           />
           <div className="flex flex-col items-center ml-2">
-            <h3 className="text-lg font-bold">Stable Chicken</h3>
+            <h3 className="text-lg font-bold">Stable #{Number(tokenId)}</h3>
             <p className="text-sm text-gray-600">Condition : 70%</p>
           </div>
           <div className="ml-3">{formatAmount(price, 14)} USDC</div>

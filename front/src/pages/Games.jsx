@@ -17,50 +17,61 @@ const Games = () => {
   };
 
   return (
-    <PageContainer>
-      <StyledSwiper
-        spaceBetween={0} // 슬라이드 사이의 간격 설정
-        centeredSlides={true} // 활성 슬라이드를 중앙에 배치
-        slidesPerView={1.5} // 자동으로 슬라이드 뷰 설정
-        loop={true} // 무한 반복 설정
-      >
-        {/* SwiperSlide 요소들 */}
-        <SwiperSlide>
-          <GameBox>
-            <BoldLargeTextBox>Lottery Game</BoldLargeTextBox>
-            <ImageBox src={rulletImageA} />
-            <GameInfo>Bet amount : 35</GameInfo>
-            <InfoDescription>The number of eggs bet by others</InfoDescription>
-            <GameInfo>Payout : 33.25</GameInfo>
-            <PlayButton onClick={handleStartGame}>Play</PlayButton>
-          </GameBox>
-        </SwiperSlide>
-        <SwiperSlide>
-          <GameBox>
-            <BoldLargeTextBox>Roulette Game</BoldLargeTextBox>
-            <ImageBox src={rulletImageB} />
-            <GameInfo>Bet amount : 35</GameInfo>
-            <InfoDescription>The number of eggs bet by others</InfoDescription>
-            <GameInfo>Payout : 33.25</GameInfo>
-            <PlayButton onClick={handleStartGame}>Play</PlayButton>
-          </GameBox>
-        </SwiperSlide>
-        <SwiperSlide>
-          <GameBox>
-            <BoldLargeTextBox>Fight Game</BoldLargeTextBox>
-            <ImageBox src={rulletImageC} />
-            <GameInfo>Bet amount : 35</GameInfo>
-            <InfoDescription>The number of eggs bet by others</InfoDescription>
-            <GameInfo>Payout : 33.25</GameInfo>
-            <PlayButton onClick={handleStartGame}>Play</PlayButton>
-          </GameBox>
-        </SwiperSlide>
-      </StyledSwiper>
-      <RewardTimeBox>
-        <BoldLargeTextBox>Chris's Next Reward Time</BoldLargeTextBox>
-        <BoldLargeTextBox>7 Hours 32 Min 02 Sec</BoldLargeTextBox>
-      </RewardTimeBox>
-    </PageContainer>
+    <>
+      <div className="flex justify-around h-12 items-center  border-b-4 border-zinc-200">
+        <div className="text-2xl font-bold">Game</div>
+      </div>
+      <PageContainer>
+        <StyledSwiper
+          spaceBetween={0} // 슬라이드 사이의 간격 설정
+          centeredSlides={true} // 활성 슬라이드를 중앙에 배치
+          slidesPerView={1.5} // 자동으로 슬라이드 뷰 설정
+          loop={true} // 무한 반복 설정
+        >
+          {/* SwiperSlide 요소들 */}
+          <SwiperSlide>
+            <GameBox>
+              <BoldLargeTextBox>Lottery Game</BoldLargeTextBox>
+              <ImageBox src={rulletImageA} />
+              <GameInfo>Bet amount : 35</GameInfo>
+              <InfoDescription>
+                The number of eggs bet by others
+              </InfoDescription>
+              <GameInfo>Payout : 33.25</GameInfo>
+              <PlayButton onClick={handleStartGame}>Play</PlayButton>
+            </GameBox>
+          </SwiperSlide>
+          <SwiperSlide>
+            <GameBox>
+              <BoldLargeTextBox>Roulette Game</BoldLargeTextBox>
+              <ImageBox src={rulletImageB} />
+              <GameInfo>Bet amount : 35</GameInfo>
+              <InfoDescription>
+                The number of eggs bet by others
+              </InfoDescription>
+              <GameInfo>Payout : 33.25</GameInfo>
+              <PlayButton onClick={handleStartGame}>Play</PlayButton>
+            </GameBox>
+          </SwiperSlide>
+          <SwiperSlide>
+            <GameBox>
+              <BoldLargeTextBox>Fight Game</BoldLargeTextBox>
+              <ImageBox src={rulletImageC} />
+              <GameInfo>Bet amount : 35</GameInfo>
+              <InfoDescription>
+                The number of eggs bet by others
+              </InfoDescription>
+              <GameInfo>Payout : 33.25</GameInfo>
+              <PlayButton onClick={handleStartGame}>Play</PlayButton>
+            </GameBox>
+          </SwiperSlide>
+        </StyledSwiper>
+        <RewardTimeBox>
+          <BoldLargeTextBox>Your Next Reward Time</BoldLargeTextBox>
+          <BoldLargeTextBox>7 Hours 32 Min 02 Sec</BoldLargeTextBox>
+        </RewardTimeBox>
+      </PageContainer>
+    </>
   );
 };
 
@@ -72,7 +83,7 @@ const PageContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
   flex-direction: column;
 `;
 
@@ -163,7 +174,7 @@ const RewardTimeBox = styled.div`
   width: 305px;
   height: 100px;
   border-radius: 15px;
-  background-color: #DFDFDF;
+  background-color: #dfdfdf;
   display: flex;
   justify-content: center;
   align-items: center;
