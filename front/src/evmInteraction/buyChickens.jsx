@@ -1,5 +1,5 @@
 export const buyContract = async (account, vault_c) => {
-  await sellStableChicken(account, vault_c);
+  await buyStableChicken(account, vault_c);
 };
 
 export const buyUser = async (account, vault_c, tokenId, price) => {
@@ -23,7 +23,7 @@ const sellStableChicken = async (account, vault_c) => {
     console.log(await vault_c.methods);
 
     await vault_c.methods
-      .sellChicken([3], ["91000000000000000"])
+      .sellChicken([7], ["93000000000000000"])
       .send({ from: account[0] });
   } catch (error) {
     console.error(error);

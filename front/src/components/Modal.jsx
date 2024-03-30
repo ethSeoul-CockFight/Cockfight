@@ -6,7 +6,7 @@ import { API_URL } from "../utils/consts.js";
 
 const Modal = ({ isOpen, onClose, isVolatile }) => {
   const { account, vault_c, decimals } = useContext(AppContext);
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState("");
 
   const buyAPI = async (chicken) => {
     const body = {
@@ -56,11 +56,7 @@ const Modal = ({ isOpen, onClose, isVolatile }) => {
   };
 
   const handleQuantityChange = (e) => {
-    const value = parseInt(e.target.value, 10);
-    if (!isNaN(value) && value >= 0) {
-      // Ensure the value is a number and not negative
-      setQuantity(value);
-    }
+    setQuantity(e.target.value);
   };
 
   return isOpen ? (
@@ -107,7 +103,7 @@ const Modal = ({ isOpen, onClose, isVolatile }) => {
             className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-4"
             onClick={buyChickens}
           >
-            Buy
+            Hatch
           </button>
         </div>
       </div>

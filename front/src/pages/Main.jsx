@@ -6,13 +6,13 @@ import backgroundImage from "../images/chicken.jpg";
 import chickenImage from "../images/c_classic.png";
 import eggImage from "../images/egg.png";
 import { AppContext } from "../App";
-import { connect } from "../evmInteraction/connect";
+import { connect, getChikenBalance } from "../evmInteraction/connect";
 import axios from "axios";
 import { API_URL, CHAIN } from "../utils/consts";
 
 const Main = () => {
   const { setActiveMenu } = footerStore();
-  const { account, setAccount, web3, decimals } = useContext(AppContext);
+  const { account, setAccount, web3, decimals, nft_c } = useContext(AppContext);
   const [totalChicken, setTotalChicken] = useState(0);
   const [userChicken, setUserChicken] = useState(0);
   const [userEgg, setUserEgg] = useState(0);
@@ -20,8 +20,7 @@ const Main = () => {
   const navigate = useNavigate();
   const onClickAccount = async () => {
     try {
-      const accounts = await connect(CHAIN);
-      console.log(accounts);
+      const accounts = await connect();
       if (accounts) {
         setAccount(accounts);
       }
@@ -34,18 +33,22 @@ const Main = () => {
     setActiveMenu("game");
   };
 
+  useEffect(() => {
+    if (!account) {
+      navigate("/main");
+    }
+  }, []);
   const fetchData = async () => {
     try {
-      console.log("account:", account);
+      if (account) {
+        setUserChicken(Number(await getChikenBalance(account, nft_c))); // Assuming the response contains an eggBalance field
+        setUserEgg(users[0].egg); // Assuming the response contains an eggBalance field
+      }
+
       const total = await axios.get(`${API_URL}/market`);
       const res = await axios.get(`${API_URL}/user?account=${account}`);
       const users = res.data.users;
       setTotalChicken(total.data.total_chicken); // Assuming the response contains an eggBalance field
-
-      if (account) {
-        setUserChicken(users[0].stable_chicken + users[0].volatile_chicken); // Assuming the response contains an eggBalance field
-        setUserEgg(users[0].egg); // Assuming the response contains an eggBalance field
-      }
     } catch (error) {
       console.error("Failed to fetch egg balance:", error);
       // Handle error appropriately
@@ -54,7 +57,7 @@ const Main = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [account]);
 
   return (
     <BackgroundDiv>

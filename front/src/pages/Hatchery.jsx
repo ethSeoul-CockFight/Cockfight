@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
 import Modal from "../components/Modal";
+import { useNavigate } from "react-router-dom";
 
 const Hatchery = () => {
-  const { account, setAccount, chain } = useContext(AppContext);
-  const [isLoading, setIsLoading] = useState(false);
-
+  const { account } = useContext(AppContext);
   // 모달코드 추가
   const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const openModal = () => {
     setModalOpen(true);
@@ -15,19 +15,10 @@ const Hatchery = () => {
   const closeModal = () => {
     setModalOpen(false);
   };
-  const get_Data = async () => {
-    setIsLoading(true);
-    try {
-      setIsLoading(false);
-    } catch (error) {
-      console.log(error);
-      setIsLoading(false);
-    }
-  };
-  //여기까지 모달
-
   useEffect(() => {
-    get_Data();
+    if (!account) {
+      navigate("/main");
+    }
   }, []);
 
   return (
@@ -45,8 +36,8 @@ const Hatchery = () => {
         {/* 첫 번째 박스 */}
         <div className="bg-black flex justify-center items-center h-1/3 ">
           <div className="flex-auto w-96 items-center justify-center">
-            <div className="text-3xl font-bold ml-3 text-yellow-50">
-              Buy Chicken
+            <div className="text-3xl font-bold ml-4 text-yellow-100">
+              Hatch Chicken
             </div>
           </div>
           <button className="flex-auto" onClick={openModal}>
@@ -76,8 +67,8 @@ const Hatchery = () => {
           </div>
           <Modal isOpen={modalOpen} onClose={closeModal} isVolatile={true} />
           <div className="flex flex-col w-96 items-end justify-end ">
-            <div className="text-3xl font-bold mr-3">get reward</div>
-            <div className="text-xl font-bold mr-3">regularly</div>
+            <div className="text-3xl font-bold mr-3">Get Egg</div>
+            <div className="text-4xl font-bold mr-3 text-red-500">Instant</div>
           </div>
         </div>
       </div>

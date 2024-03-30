@@ -4,23 +4,30 @@ import ChikenBox from "../components/ChikenBox";
 import { getSellingList } from "../evmInteraction/connect";
 import LoadingPage from "../components/Loading";
 import { AppContext } from "../App";
+import { useNavigate } from "react-router-dom";
 
 const Market = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [isReLoading, setIsReLoadging] = useState(true);
   const { vault_c, account } = useContext(AppContext);
+  const navigate = useNavigate();
 
   const [sellList, setSellList] = useState();
 
   const getSellingData = async () => {
+    setIsLoading(true);
     const response = await getSellingList(vault_c);
     setSellList(response);
-    console.log(response);
     setIsLoading(false);
   };
 
   useEffect(() => {
+    if (!account) {
+      navigate("/main");
+    }
+
     getSellingData();
-  }, []);
+  }, [isReLoading]);
 
   return (
     <>
@@ -40,7 +47,13 @@ const Market = () => {
 
           <div>
             {sellList[0]?.map((v, i) => (
-              <ChikenBox key={i} tokenId={v} price={sellList[1][i]} />
+              <ChikenBox
+                key={i}
+                tokenId={v}
+                price={sellList[1][i]}
+                check={isReLoading}
+                setCheck={setIsReLoadging}
+              />
             ))}
           </div>
         </div>
@@ -50,6 +63,3 @@ const Market = () => {
 };
 
 export default Market;
-
-// 판매 리스트, getsellingchikens(tokenID, price)
-// 구매하기, - buychkien
