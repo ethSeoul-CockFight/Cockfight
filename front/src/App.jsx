@@ -15,7 +15,6 @@ import Lottery from "./pages/Lottery";
 import Main from "./pages/Main";
 import { vault_abi } from "./web3config/CockfightVaultLight";
 import { nft_abi } from "./web3config/ChickenContractLight";
-import { SaleContract_ABI, SaleContract_ADD } from "./web3.config";
 
 export const AppContext = createContext();
 
