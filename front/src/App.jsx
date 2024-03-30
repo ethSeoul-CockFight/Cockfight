@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Welcome from "./pages/Welcome";
 import StatusBar from "./components/StatusBar";
 import Login from "./pages/Login";
-import Main from "./pages/Main";
+import MyPage from "./pages/MyPage";
 import Footer from "./components/Footer";
 import List from "./pages/List";
 import Market from "./pages/Market";
@@ -13,6 +13,7 @@ import WriteLottery from "./pages/WriteLottery";
 import BuyLottery from "./pages/BuyLottery";
 import Lottery from "./pages/Lottery";
 import { SaleContract_ABI, SaleContract_ADD } from "./web3.config";
+import Main from "./pages/Main";
 
 export const AppContext = createContext();
 
@@ -47,8 +48,9 @@ function App() {
               <Route path="/" element={<Welcome />} />
               <Route path="/login" element={<Login />} />
               <Route path="/main" element={<Main />} />
+              <Route path="/myPage" element={<MyPage />} />
               <Route path="/list" element={<List />} />
-              <Route path="/Market" element={<Market />} />
+              <Route path="/market" element={<Market />} />
               <Route path="/lottery" element={<Lottery />} />
               <Route path="/writelottery" element={<WriteLottery />} />
               <Route path="/buylottery" element={<BuyLottery />} />
