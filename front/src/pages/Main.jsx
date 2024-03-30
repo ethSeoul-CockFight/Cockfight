@@ -32,6 +32,7 @@ const Main = () => {
                     <NumberBox>{outDTOdata ? outDTOdata : 60}</NumberBox>
                 </UserItemBox>
             </UserItems>
+            <Description>Total chickens</Description>
             <Scoreboard>
                 {new Intl.NumberFormat().format(number)}
             </Scoreboard>
