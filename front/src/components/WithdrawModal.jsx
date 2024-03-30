@@ -19,7 +19,9 @@ const WithdrawModal = ({ isOpen, onClose, userAccount }) => {
     }
   };
 
-  fetchData();
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return isOpen ? (
     <div className="fixed inset-0 flex items-center justify-center z-10">
@@ -40,7 +42,7 @@ const WithdrawModal = ({ isOpen, onClose, userAccount }) => {
 
         {/* 모달 내용 */}
         <div>
-          {chickenIds.map((id, index) => (
+          {chickenIds?.map((id, index) => (
             <div className="flex mt-2 bg-slate-50	rounded-lg h-24 p-2 shadow-md mb-4 justify-between items-center">
               <img
                 src={`${process.env.PUBLIC_URL}/images/c_classic.png`}

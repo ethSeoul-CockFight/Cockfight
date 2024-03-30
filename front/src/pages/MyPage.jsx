@@ -159,7 +159,7 @@ const MyPage = () => {
               <div className="mb-10 text-lg">
                 Eggs
                 <div className="flex mt-2 bg-slate-50	rounded-lg h-24 p-2 shadow-md mb-4 justify-between items-center">
-                  <ImageBox src={eggImage} alt="Egg" />
+                  <ImageBox className="m-3 p-1" src={eggImage} alt="Egg" />
                   <div>
                     <div className=" flex justify-start text-xl font-bold mr-44">
                       {userEgg} Eggs
