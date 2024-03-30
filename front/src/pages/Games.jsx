@@ -163,7 +163,7 @@ const RewardTimeBox = styled.div`
   width: 305px;
   height: 100px;
   border-radius: 15px;
-  background-color: grey;
+  background-color: #DFDFDF;
   display: flex;
   justify-content: center;
   align-items: center;
