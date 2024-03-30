@@ -1,5 +1,17 @@
+import {
+  ALFAJORES_PARAMS,
+  KLAYTN_PARAMS,
+  NEON_PARAMS,
+  FHENIX_PARAMS,
+} from "./chainParams";
+
+import { CHAIN } from "../utils/consts";
+
 export const connect = async () => {
-  return await connect_celo();
+  if (CHAIN == "CELO") return await connect_celo();
+  else if (CHAIN == "KLAYTN") return await connect_klaytn();
+  else if (CHAIN == "NEON") return await connect_neon();
+  else if (CHAIN == "FHENIX") return await connect_fhenix();
 };
 
 export const getChikenBalance = async (account, nft_c) => {
@@ -14,15 +26,6 @@ export const getChickenIds = async (account, nft_c, balance) => {
     ids.push(Number(response));
   }
   return ids;
-};
-
-const ALFAJORES_PARAMS = {
-  chainId: "0xaef3",
-  chainName: "Alfajores Testnet",
-  nativeCurrency: { name: "Alfajores Celo", symbol: "A-CELO", decimals: 18 },
-  rpcUrls: ["https://alfajores-forno.celo-testnet.org"],
-  blockExplorerUrls: ["https://alfajores-blockscout.celo-testnet.org/"],
-  iconUrls: ["future"],
 };
 
 export const getNativeBalance = async (web3, account) => {
@@ -43,6 +46,45 @@ const connect_celo = async () => {
     await window.ethereum.request({
       method: "wallet_addEthereumChain",
       params: [ALFAJORES_PARAMS],
+    });
+    return accounts;
+  } catch (error) {}
+};
+
+const connect_klaytn = async () => {
+  try {
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    await window.ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [KLAYTN_PARAMS],
+    });
+    return accounts;
+  } catch (error) {}
+};
+
+const connect_neon = async () => {
+  try {
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    await window.ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [NEON_PARAMS],
+    });
+    return accounts;
+  } catch (error) {}
+};
+
+const connect_fhenix = async () => {
+  try {
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    await window.ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [FHENIX_PARAMS],
     });
     return accounts;
   } catch (error) {}

@@ -1,14 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
-import { AppContext } from "../App";
-import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import eggImage from "../images/egg.png";
+import React, { useContext, useEffect, useState } from 'react';
+import { AppContext } from '../App';
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import eggImage from '../images/egg.png';
 
-import LoadingPage from "../components/Loading";
-import { formatAmount, truncate } from "../utils/helpper";
-import { getNativeBalance, getChikenBalance } from "../evmInteraction/connect";
-import { API_URL } from "../utils/consts";
-import WithdrawModal from "../components/WithdrawModal";
+import LoadingPage from '../components/Loading';
+import { formatAmount, truncate } from '../utils/helpper';
+import { getNativeBalance, getChikenBalance } from '../evmInteraction/connect';
+import { API_URL } from '../utils/consts';
+import WithdrawModal from '../components/WithdrawModal';
+import { getFaucet } from '../web3config/chain';
 
 const MyPage = () => {
   const { account, web3, decimals, nft_c } = useContext(AppContext);
@@ -20,10 +21,11 @@ const MyPage = () => {
   const [userEgg, setUserEgg] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
+  const faucet = getFaucet();
 
   const fetchData = async () => {
     try {
-      console.log("account:", account);
+      console.log('account:', account);
       // const res = await axios.get(`${API_URL}/user?account=${account}`);
       // const users = res.data.users;
 
@@ -32,13 +34,13 @@ const MyPage = () => {
         // setUserEgg(users[0].egg); // Assuming the response contains an eggBalance field
       }
     } catch (error) {
-      console.error("Failed to fetch egg balance:", error);
+      console.error('Failed to fetch egg balance:', error);
       // Handle error appropriately
     }
   };
   useEffect(() => {
     if (!account) {
-      navigate("/main");
+      navigate('/main');
     }
   }, []);
 
@@ -52,7 +54,8 @@ const MyPage = () => {
   const onClickFaucet = async () => {
     try {
       setIsFaucetLoading(true);
-      await getNativeBalance(web3, account);
+      console.log(faucet);
+      window.open(faucet, '_blank');
     } catch (error) {
       console.error(error);
     }
@@ -88,7 +91,7 @@ const MyPage = () => {
             {/*헤더*/}
             <div className="flex justify-around h-12 items-center  border-b-4 border-zinc-200">
               <div>
-                <div className="text-2xl font-bold">Cock Fight</div>
+                <div className="text-2xl font-bold">My Page</div>
               </div>
             </div>
             {/* 바디 시작 */}

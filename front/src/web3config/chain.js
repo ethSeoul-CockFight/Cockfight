@@ -35,3 +35,15 @@ export const getLotteryLight = () => {
     return "0x7746517E588e3b19d398e3C5b21777c8EE00575c";
   }
 };
+
+export const getFaucet = () => {
+  if (CHAIN == "CELO") {
+    return "https://faucet.celo.org/alfajores";
+  } else if (CHAIN == "KLAYTN") {
+    return "https://baobab.wallet.klaytn.foundation/faucet";
+  } else if (CHAIN == "FHENIX") {
+    return "https://www.fhenix.io/getting-started/";
+  } else if (CHAIN == "NEON") {
+    return "https://neonfaucet.org/";
+  }
+};
