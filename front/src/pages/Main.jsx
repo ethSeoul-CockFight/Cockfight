@@ -9,8 +9,8 @@ import eggImage from "../images/egg.png";
 const Main = () => {
     const { setActiveMenu } = footerStore();
     const navigate = useNavigate();
-    const handleStartGame = () => {
-        navigate('/lottery');
+    const handleMoveToGames = () => {
+        navigate('/games');
         setActiveMenu('game');
     };
     const outDTOdata = undefined; //back에서 받아와야하는 데이터
@@ -37,7 +37,7 @@ const Main = () => {
                 {new Intl.NumberFormat().format(number)}
             </Scoreboard>
             <Description>{`TVL(Total Value Locked): $`}{outDTOdata ? outDTOdata : 253532}</Description>
-            <StartGameButton onClick={handleStartGame}>Start Game</StartGameButton>
+            <StartGameButton onClick={handleMoveToGames}>Start Game</StartGameButton>
         </BackgroundDiv>
     );
 };

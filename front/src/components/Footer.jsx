@@ -10,6 +10,7 @@ import footerStore from '../stores/footerStore';
 
 const Footer = () => {
   const { activeMenu, setActiveMenu } = footerStore();
+
   const navigate = useNavigate();
 
   const onClickHome = () => {
@@ -19,7 +20,7 @@ const Footer = () => {
 
   const onClickGame = () => {
     setActiveMenu("game");
-    navigate("/lottery");
+    navigate("/games");
   };
 
   const onClickList = () => {

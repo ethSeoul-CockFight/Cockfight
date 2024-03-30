@@ -14,6 +14,7 @@ import BuyLottery from "./pages/BuyLottery";
 import Lottery from "./pages/Lottery";
 import { SaleContract_ABI, SaleContract_ADD } from "./web3.config";
 import Main from "./pages/Main";
+import Games from "./pages/Games";
 
 export const AppContext = createContext();
 
@@ -54,6 +55,7 @@ function App() {
               <Route path="/lottery" element={<Lottery />} />
               <Route path="/write-lottery" element={<WriteLottery />} />
               <Route path="/buy-lottery" element={<BuyLottery />} />
+              <Route path="/games" element={<Games />} />
               {/* <Route path="/adminpage" element={<AdminPage />} /> */}
             </Routes>
             {account && <Footer />}
