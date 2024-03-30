@@ -6,14 +6,14 @@ import { VscDashboard } from "react-icons/vsc";
 import { GoPerson, GoScreenFull } from "react-icons/go";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import footerStore from '../stores/footerStore';
+import footerStore from "../stores/footerStore";
 
 const Footer = () => {
   const { activeMenu, setActiveMenu } = footerStore();
   const navigate = useNavigate();
 
   const onClickHome = () => {
-    setActiveMenu('main');
+    setActiveMenu("main");
     navigate(`/main`);
   };
 
@@ -22,9 +22,9 @@ const Footer = () => {
     navigate("/lottery");
   };
 
-  const onClickList = () => {
+  const onClickHatchery = () => {
     setActiveMenu("dashboard");
-    navigate("/list");
+    navigate("/Hatchery");
   };
 
   const onClickMarket = () => {
@@ -33,8 +33,8 @@ const Footer = () => {
   };
 
   const onClickMyPage = () => {
-    setActiveMenu('myPage')
-    navigate('/my-page');
+    setActiveMenu("myPage");
+    navigate("/my-page");
   };
 
   return (
@@ -53,6 +53,17 @@ const Footer = () => {
         />
         <IconLabel>Games</IconLabel>
       </FooterButton>
+
+      <FooterButton
+        onClick={onClickHatchery}
+        isActive={activeMenu === "dashboard"}
+      >
+        <VscDashboard
+          size="24px"
+          color={activeMenu === "dashboard" ? "#582fff" : "#4b5563"}
+        />
+        <IconLabel>Hatchery</IconLabel>
+      </FooterButton>
       <FooterButton onClick={onClickMarket} isActive={activeMenu === "market"}>
         <TbShoppingBag
           size="24px"
@@ -60,18 +71,11 @@ const Footer = () => {
         />
         <IconLabel>Market</IconLabel>
       </FooterButton>
-      <FooterButton onClick={onClickList} isActive={activeMenu === "dashboard"}>
-        <VscDashboard
+      <FooterButton onClick={onClickMyPage} isActive={activeMenu === "myPage"}>
+        <GoPerson
           size="24px"
-          color={activeMenu === "dashboard" ? "#582fff" : "#4b5563"}
+          color={activeMenu === "myPage" ? "#582fff" : "#4b5563"}
         />
-        <IconLabel>Dash board</IconLabel>
-      </FooterButton>
-      <FooterButton
-        onClick={onClickMyPage}
-        isActive={activeMenu === 'myPage'}
-      >
-        <GoPerson size="24px" color={activeMenu === 'myPage' ? "#582fff" : "#4b5563"} />
         <IconLabel>My Page</IconLabel>
       </FooterButton>
     </FooterContainer>
@@ -99,8 +103,8 @@ const FooterButton = styled.button`
   justify-content: center;
   align-items: center;
   color: ${({ isActive }) =>
-    isActive ?
-      `
+    isActive
+      ? `
     #582fff
   `
       : `#4b5563`};

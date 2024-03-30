@@ -2,12 +2,8 @@ import React, { useEffect } from "react";
 import { createContext, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Welcome from "./pages/Welcome";
-import StatusBar from "./components/StatusBar";
-import Login from "./pages/Login";
 import MyPage from "./pages/MyPage";
 import Footer from "./components/Footer";
-import List from "./pages/List";
-import Market from "./pages/Market";
 import Web3 from "web3";
 import WriteLottery from "./pages/WriteLottery";
 import BuyLottery from "./pages/BuyLottery";
@@ -16,6 +12,8 @@ import Main from "./pages/Main";
 import { vault_abi } from "./web3config/CockfightVaultLight";
 import { nft_abi } from "./web3config/ChickenContractLight";
 import { getNftContract, getVaultContract } from "./web3config/chain";
+import Hatchery from "./pages/Hatchery";
+import Market from "./pages/Market";
 
 export const AppContext = createContext();
 
@@ -56,8 +54,8 @@ function App() {
               <Route path="/" element={<Welcome />} />
               <Route path="/main" element={<Main />} />
               <Route path="/my-page" element={<MyPage />} />
-              <Route path="/list" element={<List />} />
               <Route path="/market" element={<Market />} />
+              <Route path="/Hatchery" element={<Hatchery />} />
               <Route path="/lottery" element={<Lottery />} />
               <Route path="/write-lottery" element={<WriteLottery />} />
               <Route path="/buy-lottery" element={<BuyLottery />} />
