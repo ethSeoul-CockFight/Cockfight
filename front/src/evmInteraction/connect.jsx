@@ -3,8 +3,8 @@ export const connect = async () => {
 };
 
 export const getChikenBalance = async (account, nft_c) => {
-  const response = await nft_c.methods.balanceof(account[0]);
-  return response;
+  const response = await nft_c.methods.balanceOf(account[0]).call();
+  return response.toString();
 };
 
 const ALFAJORES_PARAMS = {

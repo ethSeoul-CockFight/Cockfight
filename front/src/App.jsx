@@ -14,13 +14,14 @@ import { nft_abi } from "./web3config/ChickenContractLight";
 import { getNftContract, getVaultContract } from "./web3config/chain";
 import Hatchery from "./pages/Hatchery";
 import Market from "./pages/Market";
+import { CHAIN } from "./utils/consts";
 
 export const AppContext = createContext();
 
 function App() {
   const [temp, setTemp] = useState();
-  const [chain, setChain] = useState("BFC");
-  const [decimals, setDecimals] = useState(18);
+  const [chain, setChain] = useState(CHAIN);
+  const [decimals, setDecimals] = useState(14);
   const [account, setAccount] = useState("");
   const web3 = new Web3(window.ethereum);
   const n_add = getNftContract();
@@ -29,6 +30,7 @@ function App() {
   const vault_c = new web3.eth.Contract(vault_abi, v_add);
   useEffect(() => {
     console.log(vault_c);
+    console.log(nft_c);
   }, []);
 
   return (

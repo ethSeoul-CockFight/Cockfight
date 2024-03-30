@@ -84,13 +84,10 @@ const Modal = ({ isOpen, onClose, isVolatile }) => {
         <div className="flex flex-col justify-between items-center p-4">
           <div className=" font-bold">
             <div className="mb-4">
-              Buy Price: <span>- INIT</span>
+              Buy Price: <span>{quantity * 1000} - USDC</span>
             </div>
             <div className="mb-4">
-              Sell Price: <span>- INIT</span>
-            </div>
-            <div className="mb-4">
-              Egg Production: <span>- INIT</span>
+              Instant Eggs: <span>{quantity * 10} - Eggs</span>
             </div>
             <div className="mb-4 flex items-center">
               <div>Quantity: </div>
@@ -111,12 +108,6 @@ const Modal = ({ isOpen, onClose, isVolatile }) => {
             onClick={buyChickens}
           >
             Buy
-          </button>
-          <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-            onClick={sellChickens}
-          >
-            Sell
           </button>
         </div>
       </div>

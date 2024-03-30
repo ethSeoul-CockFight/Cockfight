@@ -37,7 +37,7 @@ const Hatchery = () => {
         className="flex justify-around h-12 items-center  border-b-4
        border-zinc-200"
       >
-        <div className="text-2xl font-bold">Market</div>
+        <div className="text-2xl font-bold">Hatchery</div>
       </div>
 
       {/* 바디 */}
