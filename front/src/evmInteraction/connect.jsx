@@ -21,6 +21,11 @@ export const getNativeBalance = async (web3, account) => {
   return response;
 };
 
+export const getSellingList = async (vault_c) => {
+  const response = await vault_c.methods.getSellingChickens().call();
+  return response;
+};
+
 const connect_celo = async () => {
   try {
     const accounts = await window.ethereum.request({
