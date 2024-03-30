@@ -7,13 +7,6 @@ import "./interfaces/IPriceContract.sol";
 import "./interfaces/IERC20.sol";
 import "./access/Ownable.sol";
 
-// 기능
-// 1. 닭 구매 
-// 2. egg 부화
-// 3. 알 마켓 -> 알을 사면 돈이 나간다 (egg 구매 기능)
-// 4. 닭 마켓  -> 닭을 사면 돈이 나간다 (치킨 판매 / 구매 기능)
-
-// 전제 조건 : 개발 상 편의를 위해, yield egg는 1 block 당 1개씩만 지급하도록 한다 (추후 기획 고도화 때 변경될 수 있음)
 contract CockfightVault is Ownable {
   // chicken contract
   IChickenContract public volatileChickenNft;
@@ -84,11 +77,9 @@ contract CockfightVault is Ownable {
   }
 
   function buyVolatile(uint256 lockUpDays) external payable returns(uint256) {
-    // 1. native token 이동
     uint256 price = priceContract.getChickenPriceNative();
     require(msg.value == price, "Invalid price");
 
-    // internal mint
     _mintChicken(volatileChickenNft, lockUpDays, _msgSender());
     chickenTypes[count] = 1;
 
@@ -96,27 +87,22 @@ contract CockfightVault is Ownable {
   }
 
   function buyStable(uint256 lockUpDays) external returns(uint256){
-    // 1. stable token 이동
     uint256 price = priceContract.getChickenPriceUSDC();
     usdcContract.transferFrom(_msgSender(), address(this), price);
 
-    // internal mint
     _mintChicken(stableChickenNft, lockUpDays, _msgSender());
     chickenTypes[count] = 2;
 
     return count;
   }
 
-  function hatchEggs(uint8 chickenType) external returns(uint256){ // hatch 하는 chicken은 선이자 없음 
-    // 1. claim all
+  function hatchEggs(uint8 chickenType) external returns(uint256){ 
     claimAll(_msgSender());
     
-    // 2. egg 이동
     uint256 price = priceContract.getEggPriceEgg();
     eggToken.transferFrom(_msgSender(), address(this), price);
     eggToken.burn(price); // egg burn
 
-    // internal mint
     if(chickenType == 1) {
       _mintChicken(volatileChickenNft, 0, _msgSender());
       chickenTypes[count] = chickenType;
@@ -133,12 +119,10 @@ contract CockfightVault is Ownable {
   }
 
   function _mintChicken(IChickenContract chickenCtrt, uint256 lockUpDays, address receiver) internal {
-    // 2. stable chicken 구매
     count = count + 1;
     chickenCtrt.mintNFT(receiver, count);
 
-    // 3. 선이자 증정
-    lastClaimed[count] = block.timestamp + (lockUpDays * 1 days); //Todo lock-up days 기간 변경할 여지 있음
+    lastClaimed[count] = block.timestamp + (lockUpDays * 1 days); 
     eggToken.mint(receiver, eggEmissionPerBlock * lockUpDays * 1 days);
   }
 
@@ -168,11 +152,9 @@ contract CockfightVault is Ownable {
 
     address chickenOwner;
     if(chickenType == 1) {
-      // volatile
       chickenOwner = volatileChickenNft.ownerOf(chickenId);
     }
     else {
-      // stable
       chickenOwner = stableChickenNft.ownerOf(chickenId);
     }
     
@@ -194,14 +176,12 @@ contract CockfightVault is Ownable {
   }
 
   function claimAll(address user) public returns (uint256 reward) {
-    // 1. volatile chicken 중 유저가 지닌 id 확인
     uint256 volatileBal = volatileChickenNft.balanceOf(user);
     for (uint256 i=0; i<volatileBal; i++) {
       uint256 chickenId = volatileChickenNft.tokenOfOwnerByIndex(user, i);
       reward += _claim(chickenId, user);
     }
 
-    // 2. stable chicken 중 유저가 지닌 id 확인
     uint256 stableBal = stableChickenNft.balanceOf(user);
     for (uint256 i=0; i<stableBal; i++) {
       uint256 chickenId = stableChickenNft.tokenOfOwnerByIndex(user, i);
@@ -210,14 +190,12 @@ contract CockfightVault is Ownable {
   }
 
   function estimateAllReward(address user) public view returns(uint256 reward) {
-        // 1. volatile chicken 중 유저가 지닌 id 확인
     uint256 volatileBal = volatileChickenNft.balanceOf(user);
     for (uint256 i=0; i<volatileBal; i++) {
       uint256 chickenId = volatileChickenNft.tokenOfOwnerByIndex(user, i);
       reward += estimateReward(chickenId);
     }
 
-    // 2. stable chicken 중 유저가 지닌 id 확인
     uint256 stableBal = stableChickenNft.balanceOf(user);
     for (uint256 i=0; i<stableBal; i++) {
       uint256 chickenId = stableChickenNft.tokenOfOwnerByIndex(user, i);
@@ -226,18 +204,15 @@ contract CockfightVault is Ownable {
   }
 
   function sellChicken(uint256[] memory chickens, uint256[] memory prices) public {
-    // chicken 판매 등록
     require(chickens.length == prices.length, "Invalid input");
 
     for(uint256 i=0; i<chickens.length; i++){
-      // price 추가
       chickenPrices[chickens[i]] = prices[i];
       sellingChickenCnt += 1;
     }
   }
 
   function buyChicken(uint256 chickenId) public payable{
-    // chicken 구매
     require(chickenPrices[chickenId] != 0, "Not on sale");
 
     uint256 price = chickenPrices[chickenId];

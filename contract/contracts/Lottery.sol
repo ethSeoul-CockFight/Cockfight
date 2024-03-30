@@ -11,8 +11,8 @@ contract Lottery is Ownable {
     IEggContract eggToken;
     IClaimable vault;
 
-    mapping(address => mapping(uint256 => uint256)) betAmounts; // user => lotto number => bet amounts
-    mapping(uint256 => uint256) betAmountsPerNums; // lotto number => bet amounts
+    mapping(address => mapping(uint256 => uint256)) betAmounts; 
+    mapping(uint256 => uint256) betAmountsPerNums; /
 
     uint256 totalBetAmounts;
     uint256 lottoResult;
@@ -20,7 +20,7 @@ contract Lottery is Ownable {
     constructor(address _egg, address _vault) Ownable(msg.sender) {
         eggToken = IEggContract(_egg);
         vault = IClaimable(_vault);
-        lottoResult = INITIAL_LOTTO_NUM; // lotto number는 4자리 수
+        lottoResult = INITIAL_LOTTO_NUM; 
     }
 
     function setEggToken(address _egg) external onlyOwner {
@@ -71,7 +71,7 @@ contract Lottery is Ownable {
         prize = totalBetAmounts * userShare / totalShare;
 
         require(prize > 0, "Claim nothing");
-        betAmounts[msg.sender][lottoResult] = 0; // claim 했으니, 지분을 0으로 변경
+        betAmounts[msg.sender][lottoResult] = 0; 
         
         eggToken.transferFrom(address(this), msg.sender, prize);
     }
