@@ -43,7 +43,9 @@ const Main = () => {
         }
     };
 
-    
+    useEffect(() => {
+        fetchChicken();
+    }, []);
 
     return (
         <BackgroundDiv>
