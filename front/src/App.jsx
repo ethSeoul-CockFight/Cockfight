@@ -9,6 +9,7 @@ import WriteLottery from "./pages/WriteLottery";
 import BuyLottery from "./pages/BuyLottery";
 import Lottery from "./pages/Lottery";
 import Main from "./pages/Main";
+import Games from "./pages/Games";
 import { vault_abi } from "./web3config/CockfightVaultLight";
 import { nft_abi } from "./web3config/ChickenContractLight";
 import { getNftContract, getVaultContract } from "./web3config/chain";
@@ -61,6 +62,9 @@ function App() {
               <Route path="/lottery" element={<Lottery />} />
               <Route path="/write-lottery" element={<WriteLottery />} />
               <Route path="/buy-lottery" element={<BuyLottery />} />
+              <Route path="/games" element={<Games />} />
+              {/* <Route path="/adminpage" element={<AdminPage />} /> */}
+
             </Routes>
             {account && <Footer />}
           </div>

@@ -28,8 +28,8 @@ const Main = () => {
       console.error(error);
     }
   };
-  const handleStartGame = () => {
-    navigate("/lottery");
+  const handleMoveToGames = () => {
+    navigate("/games");
     setActiveMenu("game");
   };
 
@@ -71,13 +71,14 @@ const Main = () => {
           <NumberBox>{userEgg ? userEgg : 0}</NumberBox>
         </UserItemBox>
       </UserItems>
+      <Description>Total chickens</Description>
       <Scoreboard>{new Intl.NumberFormat().format(totalChicken)}</Scoreboard>
       <Description>
         {`TVL(Total Value Locked): $`}
         {totalChicken ? totalChicken : 0}
       </Description>
       {account ? (
-        <StartGameButton onClick={handleStartGame}>Start Game</StartGameButton>
+        <StartGameButton onClick={handleMoveToGames}>Start Game</StartGameButton>
       ) : (
         <StartGameButton onClick={onClickAccount}>
           Wallet Connect
