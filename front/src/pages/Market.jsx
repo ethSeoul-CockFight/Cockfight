@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
 import Modal from "../components/Modal";
+import axios from 'axios';
 
 const Market = () => {
   const { account, setAccount, chain } = useContext(AppContext);
@@ -8,6 +9,17 @@ const Market = () => {
 
   // 모달코드 추가
   const [modalOpen, setModalOpen] = useState(false);
+
+
+  // const fetchEggBalance = async () => {
+  //   try {
+  //     const response = await axios.post('/api/getEggBalance', { /* Your request payload here, if needed */ });
+  //     setEggBalance(response.data.eggBalance); // Assuming the response contains an eggBalance field
+  //   } catch (error) {
+  //     console.error('Failed to fetch egg balance:', error);
+  //     // Handle error appropriately
+  //   }
+  // };
 
   const openModal = () => {
     setModalOpen(true);

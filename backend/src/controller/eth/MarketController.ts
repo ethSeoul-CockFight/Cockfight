@@ -1,9 +1,9 @@
 import { Context } from 'koa'
-import { KoaController, Get, Controller, Post, Validate } from 'koa-joi-controllers'
+import { KoaController, Get, Controller, Post } from 'koa-joi-controllers'
 import { routeConfig, z } from 'koa-swagger-decorator'
 import { ErrorTypes } from 'lib/error'
 import { success, error } from 'lib/response'
-import { getMarketList, getNextEggTime, tradeEggs } from 'service/MarketService'
+import { getMarket, getNextEggTime, trade } from 'service/MarketService'
 
 @Controller('')
 export class MarketController extends KoaController {
@@ -21,7 +21,7 @@ export class MarketController extends KoaController {
   })
   @Get('/market')
   async getMarketList(ctx: Context): Promise<void> {
-    const markets = await getMarketList(ctx.query as any)
+    const markets = await getMarket()
     if (markets) success(ctx, markets)
     else error(ctx, ErrorTypes.NOT_FOUND_ERROR)
   }
@@ -43,12 +43,12 @@ export class MarketController extends KoaController {
   @routeConfig({
     method: 'post',
     path: '/market/trade',
-    summary: 'Trade eggs',
-    description: 'Trade eggs',
+    summary: 'Trade',
+    description: 'Trade',
     tags: ['Market'],
-    operationId: 'tradeEggs',
+    operationId: 'trade',
     requestBody: {
-      description: 'post trade eggs',
+      description: 'post trade',
       required: true,
       content: {
         'application/json': {
@@ -59,23 +59,25 @@ export class MarketController extends KoaController {
                 type: 'string',
                 description: 'The address of the user'
               },
-              eggs: {
+              egg: {
                 type: 'number',
-                description: 'The id of the game'
+              },
+              chicken: {
+                type: 'number',
               },
               is_buy: {
                 type: 'boolean',
                 description: 'The position of the user'
               },
             },
-            required: ['address', 'eggs', 'is_buy']
+            required: ['address', 'chicken', 'egg', 'is_buy']
           }
         },
       }
     }
   })
   @Post('/market/trade')
-  async tradeEggs(ctx: Context): Promise<void> {
-    success(ctx, await tradeEggs(ctx.request.body as any))
+  async trade(ctx: Context): Promise<void> {
+    success(ctx, await trade(ctx.request.body as any))
   }
 }

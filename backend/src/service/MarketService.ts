@@ -1,39 +1,27 @@
-import { MarketEntity, UserEntity, YieldPlanEntity, getDB } from 'orm'
-
-export interface GetMarketListParam {
-  time?: string
-  limit: number
-}
+import { UserEntity, YieldPlanEntity, getDB } from 'orm'
 
 interface GetMarketListResponse {
-  markets: MarketEntity[]
+  total_chicken: number
+  total_egg: number
 }
 
-export async function getMarketList(
-  param: GetMarketListParam
-): Promise<GetMarketListResponse> {
+export async function getMarket(): Promise<GetMarketListResponse> {
   const [db] = getDB()
   const queryRunner = db.createQueryRunner('slave')
 
   try {
-    const limit = Number(param.limit) ?? 20
-
     const qb = queryRunner.manager.createQueryBuilder(
-      MarketEntity,
-      'market'
+      UserEntity,
+      'user'
     )
-    
-    if (param.time) {
-      qb.where('market.time <= :time', { time: param.time })
-    }
-    
-    const markets = await qb
-      .orderBy('market.time', 'DESC')
-      .limit(limit)
-      .getMany()
 
+    const users = await qb.getMany()
+    
+    const totalChicken = users.reduce((acc, user) => acc + user.chicken, 0)
+    const totalEgg = users.reduce((acc, user) => acc + user.egg, 0)
     return {
-      markets
+      total_chicken: totalChicken,
+      total_egg: totalEgg
     }
   } finally {
     await queryRunner.release()
@@ -90,22 +78,23 @@ export async function getNextEggTime(
 }
 
 
-interface TradeEggsParam {
+interface TradeParam {
   address: string
-  eggs: number
+  chicken: number
+  egg: number
   is_buy: boolean
 }
 
 
 
-export async function tradeEggs(
-  param: TradeEggsParam
+export async function trade(
+  param: TradeParam
 ): Promise<boolean> {
   const [db] = getDB()
   const queryRunner = db.createQueryRunner('master')
 
   try {
-    const { address, eggs, is_buy } = param
+    const { address, chicken, egg, is_buy } = param
 
     const qb = queryRunner.manager
       .getRepository(UserEntity)
@@ -117,19 +106,21 @@ export async function tradeEggs(
     })
 
     if (!user && !is_buy) throw new Error('user not found')
-    if (user && !is_buy && user?.egg < eggs) throw new Error('not enough eggs')
-    
+    if (user && !is_buy && user?.egg < egg) throw new Error('not enough eggs')
+    if (user && !is_buy && user?.chicken < chicken) throw new Error('not enough chickens')
+        
     if (!user && is_buy){
       await qb.save({
         address,
-        egg: eggs,
-        chicken: 0
+        egg,
+        chicken
       })
       return true
     }
     
     if (!user) throw new Error('user not found')
-    user.egg += is_buy ? eggs : -eggs
+    user.egg += is_buy ? egg : -egg
+    user.chicken += is_buy ? chicken : -chicken
     await qb.save(user)
     
     return true
