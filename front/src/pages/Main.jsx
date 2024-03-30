@@ -12,7 +12,10 @@ import { API_URL } from "../utils/consts";
 const Main = () => {
     const { setActiveMenu } = footerStore();
     const { account, setAccount, web3, decimals } = useContext(AppContext);
-    const [chicken, setChicken] = useState(0);
+    const [totalChicken, setTotalChicken] = useState(0);
+    const [userChicken, setUserChicken] = useState(0);
+    const [userEgg, setUserEgg] = useState(0);
+    
 
     const navigate = useNavigate();
     const handleStartGame = () => {
@@ -22,9 +25,17 @@ const Main = () => {
     
     const fetchChicken = async () => {
         try {
-            const response = await axios.get(`${API_URL}/market`);
-            console.log(response)
-            // setChicken(response.data.eggBalance); // Assuming the response contains an eggBalance field
+            console.log('account:', account)
+            const total = await axios.get(`${API_URL}/market`);
+            const res = await axios.get(`${API_URL}/user?account=${account}`);
+            const users = res.data.users
+            setTotalChicken(total.data.total_chicken); // Assuming the response contains an eggBalance field
+            
+            if (users.length == 1) {
+              setUserChicken(users[0].chicken); // Assuming the response contains an eggBalance field
+              setUserEgg(users[0].egg); // Assuming the response contains an eggBalance field
+            } 
+    
         } catch (error) {
           console.error('Failed to fetch egg balance:', error);
           // Handle error appropriately
@@ -35,8 +46,6 @@ const Main = () => {
         fetchChicken();
     }, []);
 
-    const outDTOdata = undefined; //back에서 받아와야하는 데이터
-    const number = 103256789; //chkicken 수
 
     return (
         <BackgroundDiv>
@@ -45,19 +54,19 @@ const Main = () => {
                     <ImageBox
                         src={chickenImage} alt="Chicken"
                     />
-                    <NumberBox>{outDTOdata ? outDTOdata : 3}</NumberBox>
+                    <NumberBox>{userChicken ? userChicken : 0}</NumberBox>
                 </UserItemBox>
                 <UserItemBox>
                     <ImageBox
                         src={eggImage} alt="Egg"
                     />
-                    <NumberBox>{outDTOdata ? outDTOdata : 60}</NumberBox>
+                    <NumberBox>{userEgg ? userEgg : 0}</NumberBox>
                 </UserItemBox>
             </UserItems>
             <Scoreboard>
-                {new Intl.NumberFormat().format(number)}
+                {new Intl.NumberFormat().format(totalChicken)}
             </Scoreboard>
-            <Description>{`TVL(Total Value Locked): $`}{outDTOdata ? outDTOdata : 253532}</Description>
+            <Description>{`TVL(Total Value Locked): $`}{totalChicken ? totalChicken : 0}</Description>
             <StartGameButton onClick={handleStartGame}>Start Game</StartGameButton>
         </BackgroundDiv>
     );
