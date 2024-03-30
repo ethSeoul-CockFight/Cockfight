@@ -57,10 +57,10 @@ const Market = () => {
                 alt="Volatile Chicken"
                 className="w-96"
               />
-              <div className="text-white">A stable Chicken</div>
+              <div className="text-white">Stable Chicken</div>
             </div>
           </button>
-          <Modal isOpen={modalOpen} onClose={closeModal} />
+          <Modal isOpen={modalOpen} onClose={closeModal} isVolatile={false} />
         </div>
 
         {/* 두 번째 박스 */}
@@ -72,10 +72,10 @@ const Market = () => {
                 alt="Volatile Chicken"
                 className="w-96"
               />
-              <div>A floating Chicken</div>
+              <div>Volatile Chicken</div>
             </button>
           </div>
-          <Modal isOpen={modalOpen} onClose={closeModal} />
+          <Modal isOpen={modalOpen} onClose={closeModal} isVolatile={true} />
           <div className="flex flex-col w-96 items-end justify-end ">
             <div className="text-3xl font-bold mr-3">get reward</div>
             <div className="text-xl font-bold mr-3">regularly</div>

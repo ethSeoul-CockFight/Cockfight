@@ -3,6 +3,8 @@ import { AppContext } from "../App";
 import LoadingPage from "../components/Loading";
 import { formatAmount, truncate } from "../utils/helpper";
 import { getNativeBalance } from "../evmInteraction/connect";
+import axios from "axios";
+import { API_URL } from "../utils/consts";
 
 const MyPage = () => {
   const { account, setAccount, web3, decimals } = useContext(AppContext);
@@ -10,9 +12,33 @@ const MyPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOn, setIsModalOn] = useState(false);
   const [isFaucetLoading, setIsFaucetLoading] = useState(false);
-  const [chickenBalance, setChickenBalance] = useState(0);
-  const [eggBalance, setEggBalance] = useState(0);
+  const [stableChicken, setStableChicken] = useState(0);
+  const [volatileChicken, setVolatileChicken] = useState(0);
+  const [userEgg, setUserEgg] = useState(0);
   const [data, setData] = useState();
+
+  const fetchData = async () => {
+    try {
+        console.log('account:', account)
+        const res = await axios.get(`${API_URL}/user?account=${account}`);
+        const users = res.data.users
+        
+        if (account) {
+          setStableChicken(users[0].stable_chicken); // Assuming the response contains an eggBalance field
+          setVolatileChicken(users[0].volatile_chicken); // Assuming the response contains an eggBalance field
+          setUserEgg(users[0].egg); // Assuming the response contains an eggBalance field
+        } 
+
+        } catch (error) {
+          console.error('Failed to fetch egg balance:', error);
+          // Handle error appropriately
+        }
+    };
+
+    useEffect(() => {
+      fetchData();
+    }, []);
+
 
   const onClickModal = () => {
     setIsModalOn(!isModalOn);
@@ -95,7 +121,7 @@ const MyPage = () => {
                   <div>
                     <div>Stable</div>
                     <div className="text-xl font-bold">
-                      {chickenBalance} Chickens
+                      {stableChicken} Chickens
                     </div>
                   </div>
                   <button className="bg-slate-300 rounded-lg h-12 p-1">
@@ -112,7 +138,7 @@ const MyPage = () => {
 
                   <div>
                     <div>Volatile</div>
-                    <div className="text-xl font-bold">36 Chickens</div>
+                    <div className="text-xl font-bold">{volatileChicken} Chickens</div>
                   </div>
                   <button className=" bg-slate-300 rounded-lg h-12 p-1">
                     Unstaking
@@ -128,7 +154,7 @@ const MyPage = () => {
                   </div>
                   <div>
                     <div className=" flex justify-start text-xl font-bold mr-44">
-                      {eggBalance} Eggs
+                      {userEgg} Eggs
                     </div>
                   </div>
                 </div>

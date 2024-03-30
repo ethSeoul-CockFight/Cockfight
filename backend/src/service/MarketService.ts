@@ -17,7 +17,7 @@ export async function getMarket(): Promise<GetMarketListResponse> {
 
     const users = await qb.getMany()
     
-    const totalChicken = users.reduce((acc, user) => acc + user.chicken, 0)
+    const totalChicken = users.reduce((acc, user) => acc + user.volatile_chicken + user.stable_chicken, 0)
     const totalEgg = users.reduce((acc, user) => acc + user.egg, 0)
     return {
       total_chicken: totalChicken,
@@ -80,7 +80,8 @@ export async function getNextEggTime(
 
 interface TradeParam {
   address: string
-  chicken: number
+  stable_chicken: number
+  volatile_chicken: number
   egg: number
   is_buy: boolean
 }
@@ -94,7 +95,7 @@ export async function trade(
   const queryRunner = db.createQueryRunner('master')
 
   try {
-    const { address, chicken, egg, is_buy } = param
+    const { address, stable_chicken, volatile_chicken, egg, is_buy } = param
 
     const qb = queryRunner.manager
       .getRepository(UserEntity)
@@ -107,20 +108,24 @@ export async function trade(
 
     if (!user && !is_buy) throw new Error('user not found')
     if (user && !is_buy && user?.egg < egg) throw new Error('not enough eggs')
-    if (user && !is_buy && user?.chicken < chicken) throw new Error('not enough chickens')
+    if (user && !is_buy && user?.stable_chicken < stable_chicken) throw new Error('not enough chickens')
+    if (user && !is_buy && user?.volatile_chicken < volatile_chicken) throw new Error('not enough chickens')
         
     if (!user && is_buy){
       await qb.save({
         address,
         egg,
-        chicken
+        stable_chicken,
+        volatile_chicken
       })
       return true
     }
     
     if (!user) throw new Error('user not found')
     user.egg += is_buy ? egg : -egg
-    user.chicken += is_buy ? chicken : -chicken
+    user.stable_chicken += is_buy ? stable_chicken : -stable_chicken
+    user.volatile_chicken += is_buy ? volatile_chicken : -volatile_chicken
+
     await qb.save(user)
     
     return true

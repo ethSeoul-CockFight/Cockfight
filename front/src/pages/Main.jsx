@@ -24,7 +24,7 @@ const Main = () => {
         setActiveMenu('game');
     };
     
-    const fetchChicken = async () => {
+    const fetchData = async () => {
         try {
             console.log('account:', account)
             const total = await axios.get(`${API_URL}/market`);
@@ -32,8 +32,8 @@ const Main = () => {
             const users = res.data.users
             setTotalChicken(total.data.total_chicken); // Assuming the response contains an eggBalance field
             
-            if (users.length == 1) {
-              setUserChicken(users[0].chicken); // Assuming the response contains an eggBalance field
+            if (account) {
+              setUserChicken(users[0].stable_chicken + users[0].volatile_chicken); // Assuming the response contains an eggBalance field
               setUserEgg(users[0].egg); // Assuming the response contains an eggBalance field
             } 
     
@@ -44,7 +44,7 @@ const Main = () => {
     };
 
     useEffect(() => {
-        fetchChicken();
+      fetchData();
     }, []);
 
     return (

@@ -4,7 +4,7 @@ import { AppContext } from "../App.jsx";
 import axios from 'axios';
 import { API_URL } from "../utils/consts.js";
 
-const Modal = ({ isOpen, onClose }) => {
+const Modal = ({ isOpen, onClose, isVolatile }) => {
   const { account, nft_c, decimals, chain } = useContext(AppContext);
   const [quantity, setQuantity] = useState(0); 
 
@@ -12,7 +12,8 @@ const Modal = ({ isOpen, onClose }) => {
     const body = {
       address: account[0],
       egg: 0,
-      chicken,
+      stable_chicken: isVolatile ? 0 : chicken,
+      volatile_chicken: isVolatile ? chicken : 0,
       is_buy: true,
     };
     try {
@@ -29,8 +30,9 @@ const Modal = ({ isOpen, onClose }) => {
     const body = {
       address: account[0],
       egg: 0,
-      chicken,
-      is_buy: true,
+      stable_chicken: isVolatile ? 0 : chicken,
+      volatile_chicken: isVolatile ? chicken : 0,
+      is_buy: false,
     };
     try {
       const response = await axios.post(`${API_URL}/market/trade`, body);
