@@ -8,7 +8,6 @@ import Main from "./pages/Main";
 import Footer from "./components/Footer";
 import List from "./pages/List";
 import Market from "./pages/Market";
-import QR from "./pages/Qr";
 import Web3 from "web3";
 import WriteLottery from "./pages/WriteLottery";
 import BuyLottery from "./pages/BuyLottery";
@@ -50,7 +49,6 @@ function App() {
               <Route path="/main" element={<Main />} />
               <Route path="/list" element={<List />} />
               <Route path="/Market" element={<Market />} />
-              <Route path="/qr" element={<QR />} />
               <Route path="/lottery" element={<Lottery />} />
               <Route path="/writelottery" element={<WriteLottery />} />
               <Route path="/buylottery" element={<BuyLottery />} />
