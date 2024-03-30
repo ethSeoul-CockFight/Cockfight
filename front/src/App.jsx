@@ -42,7 +42,7 @@ function App() {
         }}
       >
         <BrowserRouter>
-          <div className="iphone">
+          <div className="iphone sm:max-w-sm lg:max-w-lg">
             <Routes>
               <Route path="/" element={<Welcome />} />
               <Route path="/login" element={<Login />} />
