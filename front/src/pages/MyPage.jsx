@@ -1,23 +1,25 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import eggImage from "../images/egg.png";
+
 import LoadingPage from "../components/Loading";
 import { formatAmount, truncate } from "../utils/helpper";
 import { getNativeBalance, getChikenBalance } from "../evmInteraction/connect";
-import axios from "axios";
 import { API_URL } from "../utils/consts";
 import WithdrawModal from "../components/WithdrawModal";
 
 const MyPage = () => {
-  const { account, setAccount, web3, decimals, vault_c, nft_c } =
-    useContext(AppContext);
+  const { account, web3, decimals, nft_c } = useContext(AppContext);
   const [balance, setBalance] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isFaucetLoading, setIsFaucetLoading] = useState(false);
   const [stableChicken, setStableChicken] = useState(0);
   const [volatileChicken, setVolatileChicken] = useState(0);
   const [userEgg, setUserEgg] = useState(0);
-  const [data, setData] = useState();
   const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     try {
@@ -34,6 +36,11 @@ const MyPage = () => {
       // Handle error appropriately
     }
   };
+  useEffect(() => {
+    if (!account) {
+      navigate("/main");
+    }
+  }, []);
 
   const openModal = () => {
     setModalOpen(true);
@@ -169,9 +176,7 @@ const MyPage = () => {
               <div className="mb-10 text-lg">
                 Eggs
                 <div className="flex mt-2 bg-slate-50	rounded-lg h-24 p-2 shadow-md mb-4 justify-between items-center">
-                  <div className="flex rounded-full bg-slate-300 h-16 w-16 text-xs justify-center items-center	">
-                    Eggs
-                  </div>
+                  <ImageBox src={eggImage} alt="Egg" />
                   <div>
                     <div className=" flex justify-start text-xl font-bold mr-44">
                       {userEgg} Eggs
@@ -199,3 +204,11 @@ const MyPage = () => {
 };
 
 export default MyPage;
+
+const ImageBox = styled.img`
+  width: 46px;
+  height: 44px;
+  background-color: white;
+  border-radius: 50%;
+  object-fit: cover;
+`;

@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
 import Modal from "../components/Modal";
+import { useNavigate } from "react-router-dom";
 
 const Hatchery = () => {
-  const { account, setAccount, chain } = useContext(AppContext);
-  const [isLoading, setIsLoading] = useState(false);
-
+  const { account } = useContext(AppContext);
   // 모달코드 추가
   const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const openModal = () => {
     setModalOpen(true);
@@ -15,19 +15,10 @@ const Hatchery = () => {
   const closeModal = () => {
     setModalOpen(false);
   };
-  const get_Data = async () => {
-    setIsLoading(true);
-    try {
-      setIsLoading(false);
-    } catch (error) {
-      console.log(error);
-      setIsLoading(false);
-    }
-  };
-  //여기까지 모달
-
   useEffect(() => {
-    get_Data();
+    if (!account) {
+      navigate("/main");
+    }
   }, []);
 
   return (

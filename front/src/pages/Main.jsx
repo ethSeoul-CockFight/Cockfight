@@ -20,8 +20,7 @@ const Main = () => {
   const navigate = useNavigate();
   const onClickAccount = async () => {
     try {
-      const accounts = await connect("CELO");
-      console.log(accounts);
+      const accounts = await connect();
       if (accounts) {
         setAccount(accounts);
       }
@@ -34,6 +33,11 @@ const Main = () => {
     setActiveMenu("game");
   };
 
+  useEffect(() => {
+    if (!account) {
+      navigate("/main");
+    }
+  }, []);
   const fetchData = async () => {
     try {
       if (account) {
@@ -53,7 +57,7 @@ const Main = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [account]);
 
   return (
     <BackgroundDiv>

@@ -4,10 +4,12 @@ import ChikenBox from "../components/ChikenBox";
 import { getSellingList } from "../evmInteraction/connect";
 import LoadingPage from "../components/Loading";
 import { AppContext } from "../App";
+import { useNavigate } from "react-router-dom";
 
 const Market = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { vault_c, account } = useContext(AppContext);
+  const navigate = useNavigate();
 
   const [sellList, setSellList] = useState();
 
@@ -19,6 +21,11 @@ const Market = () => {
 
   useEffect(() => {
     getSellingData();
+  }, []);
+  useEffect(() => {
+    if (!account) {
+      navigate("/main");
+    }
   }, []);
 
   return (
