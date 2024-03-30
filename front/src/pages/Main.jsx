@@ -1,14 +1,27 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import footerStore from "../stores/footerStore";
 import backgroundImage from "../images/chicken.jpg";
 import chickenImage from "../images/c_classic.png";
 import eggImage from "../images/egg.png";
+import { AppContext } from "../App";
+import { connect } from "../evmInteraction/connect";
 
 const Main = () => {
   const { setActiveMenu } = footerStore();
+  const { account, setAccount, chain } = useContext(AppContext);
   const navigate = useNavigate();
+  const onClickAccount = async () => {
+    try {
+      const accounts = await connect(chain);
+      if (accounts) {
+        setAccount(accounts);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const handleStartGame = () => {
     navigate("/lottery");
     setActiveMenu("game");
@@ -33,7 +46,13 @@ const Main = () => {
         {`TVL(Total Value Locked): $`}
         {outDTOdata ? outDTOdata : 253532}
       </Description>
-      <StartGameButton onClick={handleStartGame}>Start Game</StartGameButton>
+      {account ? (
+        <StartGameButton onClick={handleStartGame}>Start Game</StartGameButton>
+      ) : (
+        <StartGameButton onClick={onClickAccount}>
+          Wallet Connect
+        </StartGameButton>
+      )}
     </BackgroundDiv>
   );
 };
