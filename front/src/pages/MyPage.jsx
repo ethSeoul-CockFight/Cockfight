@@ -49,16 +49,6 @@ const MyPage = () => {
     setModalOpen(false);
   };
 
-  const get_Data = async () => {
-    setIsLoading(true);
-    try {
-      setIsLoading(false);
-    } catch (error) {
-      console.log(error);
-      setIsLoading(false);
-    }
-  };
-
   const onClickFaucet = async () => {
     try {
       setIsFaucetLoading(true);
@@ -69,18 +59,13 @@ const MyPage = () => {
     setIsFaucetLoading(false);
   };
 
-  function waitTenSeconds() {
-    return new Promise((resolve) => {
-      setTimeout(resolve, 1000);
-    });
-  }
-
   const get_account_data = async () => {
+    setIsLoading(true);
     try {
-      await waitTenSeconds();
       const response = await getNativeBalance(web3, account);
       const value = formatAmount(response, decimals);
       setBalance(value);
+      await fetchData();
     } catch (error) {
       console.error(error);
     }
@@ -89,8 +74,6 @@ const MyPage = () => {
 
   useEffect(() => {
     get_account_data();
-    get_Data();
-    fetchData();
   }, []);
 
   return (
