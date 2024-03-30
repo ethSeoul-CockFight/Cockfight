@@ -1,0 +1,16 @@
+.Icon {
+  text-align: center;
+  padding: 50px;
+}
+
+.Icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.Icon-container img {
+  max-width: 200px;
+  max-height: 200px;
+}
