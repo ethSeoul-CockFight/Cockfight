@@ -42,8 +42,7 @@ function App() {
         }}
       >
         <BrowserRouter>
-          <div className>
-            {/* <StatusBar /> */}
+          <div className="iphone">
             <Routes>
               <Route path="/" element={<Welcome />} />
               <Route path="/login" element={<Login />} />
