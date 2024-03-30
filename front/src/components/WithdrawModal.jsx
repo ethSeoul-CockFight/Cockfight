@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
-import { buyContract } from "../evmInteraction/buyChickens.jsx";
-import { getChikenBalance, getChickenIds } from "../evmInteraction/connect";
-import { AppContext } from "../App.jsx";
-import axios from "axios";
-import { API_URL } from "../utils/consts.js";
+import React, { useContext, useEffect, useState } from 'react';
+import { buyContract } from '../evmInteraction/buyChickens.jsx';
+import { getChikenBalance, getChickenIds } from '../evmInteraction/connect';
+import { AppContext } from '../App.jsx';
+import axios from 'axios';
+import { API_URL } from '../utils/consts.js';
 
 const WithdrawModal = ({ isOpen, onClose, userAccount }) => {
   const { account, vault_c, decimals, nft_c } = useContext(AppContext);
@@ -52,7 +52,7 @@ const WithdrawModal = ({ isOpen, onClose, userAccount }) => {
                 <div className="text-sm"> condition: 70%</div>
               </div>
               <button className="bg-slate-200 rounded-lg h-12 p-1">
-                <div> Locked up</div>
+                <div>Unstaking</div>
               </button>
             </div>
           ))}
