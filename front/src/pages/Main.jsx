@@ -38,16 +38,18 @@ const Main = () => {
       navigate("/main");
     }
   }, []);
+
   const fetchData = async () => {
     try {
       if (account) {
-        setUserChicken(Number(await getChikenBalance(account, nft_c))); // Assuming the response contains an eggBalance field
-        setUserEgg(users[0].egg); // Assuming the response contains an eggBalance field
+         const accountRes = await axios.get(`${API_URL}/user?address=${account[0]}`);      
+          const users = accountRes.data.users
+          setUserEgg(users[0].egg);
+          setUserChicken(users[0].stable_chicken + users[0].volatile_chicken);
       }
 
       const total = await axios.get(`${API_URL}/market`);
-      const res = await axios.get(`${API_URL}/user?account=${account}`);
-      const users = res.data.users;
+      console.log(total)
       setTotalChicken(total.data.total_chicken); // Assuming the response contains an eggBalance field
     } catch (error) {
       console.error("Failed to fetch egg balance:", error);

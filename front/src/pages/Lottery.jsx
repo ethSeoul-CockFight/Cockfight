@@ -299,7 +299,6 @@ const Lottery = () => {
       setLotteryResult(didWin ? "Congratulations! You've won!" : "Sorry, better luck next time!");
     } catch (error) {
       console.error("Failed on lottery:");
-      // Handle error appropriately
     }
   }
   

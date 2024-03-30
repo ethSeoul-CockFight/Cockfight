@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -7,6 +7,8 @@ import rulletImageB from '../images/rullet2.png';
 import rulletImageC from '../images/main.png';
 import { useNavigate } from 'react-router-dom';
 import footerStore from '../stores/footerStore';
+import { API_URL } from '../utils/consts';
+import axios from "axios";
 
 const Games = () => {
   const { setActiveMenu } = footerStore();
@@ -15,6 +17,53 @@ const Games = () => {
     navigate('/lottery');
     setActiveMenu('game');
   };
+  const [targetDate, setTargetDate] = useState(0);
+  const [countdown, setCountdown] = useState("00:00:00");
+
+  const fetchData = async () => {
+    try {
+      
+      const mostRecentGame = await axios.get(`${API_URL}/game`);
+      const endTime = Number(mostRecentGame.data.game.end_time) * 1000
+      setTargetDate(endTime);
+    } catch (error) {
+      console.error("Failed to on fetch data:", error);
+      // Handle error appropriately
+    }
+  };
+
+  const calculateCountdown = () => {
+    // Set your target date/time for countdown
+    const now = new Date().getTime();
+    const distance = targetDate - now;
+
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (targetDate) {
+      const timer = setInterval(() => {
+        const newCountdown = calculateCountdown();
+        setCountdown(newCountdown);
+        
+        const now = new Date().getTime();
+        if (targetDate <= now) {
+          clearInterval(timer); // Stop the timer once the countdown is finished
+        }
+      }, 1000);
+  
+      return () => clearInterval(timer);
+    }
+  }, [targetDate]);
+
 
   return (
     <>
@@ -68,7 +117,7 @@ const Games = () => {
         </StyledSwiper>
         <RewardTimeBox>
           <BoldLargeTextBox>Your Next Reward Time</BoldLargeTextBox>
-          <BoldLargeTextBox>7 Hours 32 Min 02 Sec</BoldLargeTextBox>
+          <BoldLargeTextBox> {countdown}</BoldLargeTextBox>
         </RewardTimeBox>
       </PageContainer>
     </>

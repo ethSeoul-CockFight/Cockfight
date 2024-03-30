@@ -9,11 +9,12 @@ const Modal = ({ isOpen, onClose, isVolatile }) => {
   const [quantity, setQuantity] = useState("");
 
   const buyAPI = async (chicken) => {
+    console.log(isVolatile)
     const body = {
       address: account[0],
       egg: 0,
-      stable_chicken: isVolatile ? 0 : chicken,
-      volatile_chicken: isVolatile ? chicken : 0,
+      stable_chicken: isVolatile ? 0 : Number(chicken),
+      volatile_chicken: isVolatile ? Number(chicken) : 0,
       is_buy: true,
     };
     try {
@@ -66,7 +67,7 @@ const Modal = ({ isOpen, onClose, isVolatile }) => {
         {/* 모달 헤더 */}
         <div className="modal-content mb-4 flex justify-between items-center ">
           <div className="text-blue-500 text-2xl font-bold">
-            Chicken Details
+            Chicken Details {isVolatile ? "Volatile" : "Stable"}
           </div>
           <div onClick={onClose}>
             <img

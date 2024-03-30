@@ -10,6 +10,7 @@ import { getNativeBalance, getChikenBalance } from '../evmInteraction/connect';
 import { API_URL } from '../utils/consts';
 import WithdrawModal from '../components/WithdrawModal';
 import { getFaucet } from '../web3config/chain';
+import axios from "axios";
 
 const MyPage = () => {
   const { account, web3, decimals, nft_c } = useContext(AppContext);
@@ -23,21 +24,26 @@ const MyPage = () => {
   const navigate = useNavigate();
   const faucet = getFaucet();
 
+
   const fetchData = async () => {
     try {
-      console.log('account:', account);
-      // const res = await axios.get(`${API_URL}/user?account=${account}`);
-      // const users = res.data.users;
-
-      if (account[0]) {
-        setStableChicken(await getChikenBalance(account, nft_c)); // Assuming the response contains an eggBalance field
-        // setUserEgg(users[0].egg); // Assuming the response contains an eggBalance field
+      if (account) {
+         const accountRes = await axios.get(`${API_URL}/user?address=${account[0]}`);      
+          const users = accountRes.data.users
+          setUserEgg(users[0].egg);
+          setStableChicken(users[0].stable_chicken);
+          setVolatileChicken(users[0].volatile_chicken);
       }
     } catch (error) {
-      console.error('Failed to fetch egg balance:', error);
+      console.error("Failed to fetch egg balance:", error);
       // Handle error appropriately
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, [account]);
+
   useEffect(() => {
     if (!account) {
       navigate('/main');
