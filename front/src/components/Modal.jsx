@@ -8,10 +8,10 @@ const Modal = ({ isOpen, onClose, isVolatile }) => {
   const { account, vault_c, decimals } = useContext(AppContext);
   const quantity = 1;
 
-  const buyAPI = async (chicken) => {
+  const buyAPI = async (chicken, egg) => {
     const body = {
       address: account[0],
-      egg: 10 * Number(chicken),
+      egg: egg,
       stable_chicken: isVolatile ? 0 : Number(chicken),
       volatile_chicken: isVolatile ? Number(chicken) : 0,
       is_buy: true,
@@ -26,10 +26,10 @@ const Modal = ({ isOpen, onClose, isVolatile }) => {
     }
   };
 
-  const sellAPI = async (chicken) => {
+  const sellAPI = async (chicken, egg) => {
     const body = {
       address: account[0],
-      egg: 0,
+      egg: egg,
       stable_chicken: isVolatile ? 0 : chicken,
       volatile_chicken: isVolatile ? chicken : 0,
       is_buy: false,
@@ -46,7 +46,7 @@ const Modal = ({ isOpen, onClose, isVolatile }) => {
   const buyChickens = async () => {
     const response = await buyContract(account, vault_c, decimals);
     if (response) {
-      await buyAPI(quantity);
+      await buyAPI(quantity, quantity * 10);
     }
     onClose();
   };

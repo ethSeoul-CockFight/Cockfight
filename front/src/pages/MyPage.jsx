@@ -23,6 +23,8 @@ const MyPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
   const faucet = getFaucet();
+  const [showSuccessModal, setShowSuccessModal] = useState(false); // 성공 모달 상태
+
 
 
   const fetchData = async () => {
@@ -67,6 +69,40 @@ const MyPage = () => {
       console.error(error);
     }
     setIsFaucetLoading(false);
+  };
+  
+  const hatchChickens = async () => {
+    if (userEgg < 1000) {
+      alert("You need at least 1000 eggs to hatch a chicken.");
+      return;
+    }
+
+    const sell = {
+      address: account[0],
+      egg: 1000,
+      stable_chicken: 0,
+      volatile_chicken: 0,
+      is_buy: false,
+    };
+
+    const buy = {
+      address: account[0],
+      egg: 0,
+      stable_chicken: 1,
+      volatile_chicken: 0,
+      is_buy: true,
+    };
+
+    try {
+      const sellRes = await axios.post(`${API_URL}/market/trade`, sell);
+      const buyRes = await axios.post(`${API_URL}/market/trade`, buy);
+      setShowSuccessModal(true);
+    } catch (error) {
+      console.error('Failed to perform buy operation:', error);
+      // Handle error appropriately
+    }
+
+
   };
 
   const get_account_data = async () => {
@@ -183,9 +219,15 @@ const MyPage = () => {
                   <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-2 rounded mr-2">
                     Sell eggs
                   </button>
-                  <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                  <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" onClick={hatchChickens} >
                     Hatched eggs
                   </button>
+                  {showSuccessModal && (
+                    <SuccessModal>
+                      <p>Congratulations! Your eggs have been successfully hatched.</p>
+                      <button onClick={() => setShowSuccessModal(false)}>Close</button>
+                    </SuccessModal>
+                  )}
                 </div>
               </div>
             </div>
@@ -204,4 +246,20 @@ const ImageBox = styled.img`
   background-color: white;
   border-radius: 50%;
   object-fit: cover;
+`;
+
+
+const SuccessModal = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  padding: 20px;
+  background-color: white;
+  border: 2px solid #4caf50;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  z-index: 1000; // Ensure it's above other content
 `;
