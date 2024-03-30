@@ -12,7 +12,7 @@ contract Lottery is Ownable {
     IClaimable vault;
 
     mapping(address => mapping(uint256 => uint256)) betAmounts; 
-    mapping(uint256 => uint256) betAmountsPerNums; /
+    mapping(uint256 => uint256) betAmountsPerNums; 
 
     uint256 totalBetAmounts;
     uint256 lottoResult;
