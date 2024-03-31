@@ -1,5 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { buyContract } from '../evmInteraction/buyChickens.jsx';
+import {
+  buyContract,
+  withdrawStableChicken,
+} from '../evmInteraction/buyChickens.jsx';
 import { getChikenBalance, getChickenIds } from '../evmInteraction/connect';
 import { AppContext } from '../App.jsx';
 import axios from 'axios';
@@ -19,7 +22,39 @@ const WithdrawModal = ({ isOpen, onClose, userAccount }) => {
     }
   };
 
-  fetchData();
+  React.useEffect(() => {
+    // 이펙트에서 'value' 값을 사용 중입니다.  // dependency 배열에 'value' 값을 추가해야 합니다.
+    fetchData();
+  }, [stableChicken]); // 'value' 값이 변경될 때 이펙트를 실행합니다.
+
+  const sellAPI = async (chicken, egg) => {
+    console.log('chicken>> ', chicken, egg);
+    const body = {
+      address: account[0],
+      egg: egg,
+      stable_chicken: chicken, // isVolatile ? 0 : chicken,
+      volatile_chicken: 0, // isVolatile ? chicken : 0,
+      is_buy: false,
+    };
+    try {
+      const response = await axios.post(`${API_URL}/market/trade`, body);
+      console.log('Sell response:', response.data);
+    } catch (error) {
+      console.error('Failed to fetch egg balance:', error);
+      // Handle error appropriately
+    }
+  };
+
+  const sellChickens = async (tokenId) => {
+    if (tokenId % 2 == 0) {
+      await withdrawStableChicken(account, tokenId, vault_c);
+      setStableChicken(Number(await getChikenBalance(account, nft_c)));
+      await sellAPI(1);
+      onClose();
+    } else {
+      alert('Your chicken locked-up until April 3');
+    }
+  };
 
   return isOpen ? (
     <div className="fixed inset-0 flex items-center justify-center z-10">
@@ -51,8 +86,11 @@ const WithdrawModal = ({ isOpen, onClose, userAccount }) => {
                 <div className="text-xl font-bold">Stable #{id}</div>
                 <div className="text-sm"> condition: 70%</div>
               </div>
-              <button className="bg-slate-200 rounded-lg h-12 p-1">
-                <div>Unstaking</div>
+              <button
+                className="bg-slate-200 rounded-lg h-12 p-1"
+                onClick={() => sellChickens(id)}
+              >
+                <div>{id % 2 == 0 ? 'Unstaking' : 'Locked-up'}</div>
               </button>
             </div>
           ))}

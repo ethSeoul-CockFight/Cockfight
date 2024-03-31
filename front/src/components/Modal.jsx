@@ -52,7 +52,7 @@ const Modal = ({ isOpen, onClose, isVolatile }) => {
   };
 
   const sellChickens = async () => {
-    // await sellContract(chain, account, nft_c, decimals);
+    // await sellContract(chain, account, vault_c, decimals);
     await sellAPI(quantity);
     onClose();
   };

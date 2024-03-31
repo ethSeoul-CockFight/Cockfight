@@ -19,6 +19,17 @@ const buyStableChicken = async (account, vault_c) => {
   return true;
 };
 
+export const withdrawStableChicken = async (account, tokenId, vault_c) => {
+  try {
+    console.log(await vault_c.methods);
+
+    await vault_c.methods.withdrawNative(tokenId).send({ from: account[0] });
+  } catch (error) {
+    return false;
+  }
+  return true;
+};
+
 const sellStableChicken = async (account, vault_c) => {
   try {
     console.log(await vault_c.methods);
