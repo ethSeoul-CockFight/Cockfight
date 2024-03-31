@@ -5,7 +5,6 @@ import "../ERC721/ERC721.sol";
 import "../interfaces/IERC5484.sol";
 
 // OpenZeppelin Contracts (v5.0.0)
-// OwnerOnly : 소각권리가 Owner 있는것 가정.
 
 abstract contract ERC5484 is ERC721, IERC5484 {
   mapping(uint256 => BurnAuth) private burnAuthState;
