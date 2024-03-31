@@ -10,7 +10,7 @@ import { getNativeBalance, getChikenBalance } from '../evmInteraction/connect';
 import { API_URL } from '../utils/consts';
 import WithdrawModal from '../components/WithdrawModal';
 import { getFaucet } from '../web3config/chain';
-import axios from "axios";
+import axios from 'axios';
 
 const MyPage = () => {
   const { account, web3, decimals, nft_c } = useContext(AppContext);
@@ -25,20 +25,31 @@ const MyPage = () => {
   const faucet = getFaucet();
   const [showSuccessModal, setShowSuccessModal] = useState(false); // 성공 모달 상태
 
-
+  function onClickCopy() {
+    navigator.clipboard
+      .writeText(account[0])
+      .then(() => {
+        console.log('클립보드에 복사되었습니다.');
+      })
+      .catch((err) => {
+        console.error('복사하는데 실패했습니다.', err);
+      });
+  }
 
   const fetchData = async () => {
     try {
       if (account) {
-         const accountRes = await axios.get(`${API_URL}/user?address=${account[0]}`);      
-          const users = accountRes.data.users
-          console.log(users)
-          setUserEgg(users[0].egg);
-          setStableChicken(users[0].stable_chicken);
-          setVolatileChicken(users[0].volatile_chicken);
+        const accountRes = await axios.get(
+          `${API_URL}/user?address=${account[0]}`,
+        );
+        const users = accountRes.data.users;
+        console.log(users);
+        setUserEgg(users[0].egg);
+        setStableChicken(users[0].stable_chicken);
+        setVolatileChicken(users[0].volatile_chicken);
       }
     } catch (error) {
-      console.error("Failed to fetch egg balance:", error);
+      console.error('Failed to fetch egg balance:', error);
       // Handle error appropriately
     }
   };
@@ -70,10 +81,10 @@ const MyPage = () => {
     }
     setIsFaucetLoading(false);
   };
-  
+
   const hatchChickens = async () => {
     if (userEgg < 1000) {
-      alert("You need at least 1000 eggs to hatch a chicken.");
+      alert('You need at least 1000 eggs to hatch a chicken.');
       return;
     }
 
@@ -101,8 +112,6 @@ const MyPage = () => {
       console.error('Failed to perform buy operation:', error);
       // Handle error appropriately
     }
-
-
   };
 
   const get_account_data = async () => {
@@ -143,6 +152,12 @@ const MyPage = () => {
               <div className=" bg-slate-50	rounded-lg h-28 p-4 shadow-md mb-8">
                 <div className="flex justify-between">
                   <div className="font-semibold mb-4">My Balance</div>
+                  <button
+                    className="bg-slate-300 rounded-lg h-8 p-1"
+                    onClick={onClickCopy}
+                  >
+                    {truncate(account[0])}
+                  </button>
                   <button
                     className="bg-slate-300 rounded-lg h-8 p-1"
                     onClick={onClickFaucet}
@@ -219,13 +234,21 @@ const MyPage = () => {
                   <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-1 px-2 rounded mr-2">
                     Sell eggs
                   </button>
-                  <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" onClick={hatchChickens} >
+                  <button
+                    className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={hatchChickens}
+                  >
                     Hatched eggs
                   </button>
                   {showSuccessModal && (
                     <SuccessModal>
-                      <p>Congratulations! Your eggs have been successfully hatched.</p>
-                      <button onClick={() => setShowSuccessModal(false)}>Close</button>
+                      <p>
+                        Congratulations! Your eggs have been successfully
+                        hatched.
+                      </p>
+                      <button onClick={() => setShowSuccessModal(false)}>
+                        Close
+                      </button>
                     </SuccessModal>
                   )}
                 </div>
@@ -247,7 +270,6 @@ const ImageBox = styled.img`
   border-radius: 50%;
   object-fit: cover;
 `;
-
 
 const SuccessModal = styled.div`
   position: fixed;
