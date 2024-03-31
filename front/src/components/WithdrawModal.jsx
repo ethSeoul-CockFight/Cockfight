@@ -49,7 +49,7 @@ const WithdrawModal = ({ isOpen, onClose, userAccount }) => {
     if (tokenId % 2 == 0) {
       await withdrawStableChicken(account, tokenId, vault_c);
       setStableChicken(Number(await getChikenBalance(account, nft_c)));
-      await sellAPI(1,0);
+      await sellAPI(1, 0);
       onClose();
     } else {
       alert('Your chicken locked-up until April 3');
@@ -84,7 +84,9 @@ const WithdrawModal = ({ isOpen, onClose, userAccount }) => {
               />
               <div>
                 <div className="text-xl font-bold">Stable #{id}</div>
-                <div className="text-sm"> condition: 70%</div>
+                <div className="text-sm">
+                  condition: {id % 2 == 0 ? '100%' : '70%'}
+                </div>
               </div>
               <button
                 className="bg-slate-200 rounded-lg h-12 p-1"

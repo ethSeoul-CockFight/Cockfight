@@ -1,7 +1,7 @@
-import { useContext, useEffect } from "react";
-import { formatAmount } from "../utils/helpper";
-import { buyUser } from "../evmInteraction/buyChickens";
-import { AppContext } from "../App";
+import { useContext, useEffect } from 'react';
+import { formatAmount } from '../utils/helpper';
+import { buyUser } from '../evmInteraction/buyChickens';
+import { AppContext } from '../App';
 
 const ChikenBox = ({ tokenId, price, check, setCheck }) => {
   const { account, vault_c, decimals } = useContext(AppContext);
@@ -23,7 +23,9 @@ const ChikenBox = ({ tokenId, price, check, setCheck }) => {
           />
           <div className="flex flex-col items-center ml-2">
             <h3 className="text-lg font-bold">Stable #{Number(tokenId)}</h3>
-            <p className="text-sm text-gray-600">Condition : 70%</p>
+            <p className="text-sm text-gray-600">
+              Condition : {formatAmount(price, 14) / 10}%
+            </p>
           </div>
           <div className="ml-3">{formatAmount(price, 14)} USDC</div>
         </div>

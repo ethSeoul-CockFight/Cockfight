@@ -75,7 +75,7 @@ const Main = () => {
       <Scoreboard>{new Intl.NumberFormat().format(totalChicken)}</Scoreboard>
       <Description>
         {`TVL(Total Value Locked): $`}
-        {totalChicken ? totalChicken : 0}
+        {totalChicken ? totalChicken * 1000 : 0}
       </Description>
       {account ? (
         <StartGameButton onClick={handleMoveToGames}>
