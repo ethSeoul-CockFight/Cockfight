@@ -49,7 +49,7 @@ const WithdrawModal = ({ isOpen, onClose, userAccount }) => {
     if (tokenId % 2 == 0) {
       await withdrawStableChicken(account, tokenId, vault_c);
       setStableChicken(Number(await getChikenBalance(account, nft_c)));
-      await sellAPI(1);
+      await sellAPI(1,0);
       onClose();
     } else {
       alert('Your chicken locked-up until April 3');
