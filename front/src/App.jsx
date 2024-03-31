@@ -21,6 +21,8 @@ import {
 import Hatchery from './pages/Hatchery';
 import Market from './pages/Market';
 import { CHAIN } from './utils/consts';
+import styled from 'styled-components'; // styled-components 임포트
+
 
 export const AppContext = createContext();
 
@@ -43,7 +45,7 @@ function App() {
   }, []);
 
   return (
-    <div>
+    <AppContainer>
       <AppContext.Provider
         value={{
           temp,
@@ -78,8 +80,13 @@ function App() {
           </div>
         </BrowserRouter>
       </AppContext.Provider>
-    </div>
+    </AppContainer>
   );
 }
 
 export default App;
+
+const AppContainer = styled.div`
+  height: 100vh; /* 전체 뷰포트 높이 */
+  overflow-y: auto; /* 세로 방향으로 내용이 넘칠 때 스크롤바 표시 */
+`;
