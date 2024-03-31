@@ -3,12 +3,23 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { MetaMaskProvider } from '@metamask/sdk-react';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  // <React.StrictMode>
+  <MetaMaskProvider
+    debug={false}
+    sdkOptions={{
+      dappMetadata: {
+        name: 'Example React Dapp',
+        url: window.location.href,
+      },
+      infuraAPIKey: 'https://alfajores-forno.celo-testnet.org',
+      // Other options
+    }}
+  >
     <App />
-  // {/* </React.StrictMode> */}
+  </MetaMaskProvider>,
 );
 
 // If you want to start measuring performance in your app, pass a function

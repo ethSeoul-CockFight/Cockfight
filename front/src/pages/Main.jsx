@@ -10,12 +10,25 @@ import { connect, getChikenBalance } from '../evmInteraction/connect';
 import axios from 'axios';
 import { API_URL, CHAIN } from '../utils/consts';
 
+import { useSDK } from '@metamask/sdk-react';
+
 const Main = () => {
   const { setActiveMenu } = footerStore();
+  const { sdk, connected, connecting, provider, chainId } = useSDK();
   const { account, setAccount, web3, decimals, nft_c } = useContext(AppContext);
   const [totalChicken, setTotalChicken] = useState(0);
   const [userChicken, setUserChicken] = useState(0);
   const [userEgg, setUserEgg] = useState(0);
+
+  const connect = async () => {
+    try {
+      const accounts = await sdk?.connect();
+      console.log(accounts);
+      setAccount(accounts?.[0]);
+    } catch (err) {
+      console.warn('failed to connect..', err);
+    }
+  };
 
   const navigate = useNavigate();
   const onClickAccount = async () => {
@@ -82,9 +95,7 @@ const Main = () => {
           Start Game
         </StartGameButton>
       ) : (
-        <StartGameButton onClick={onClickAccount}>
-          Wallet Connect
-        </StartGameButton>
+        <StartGameButton onClick={connect}>Wallet Connect</StartGameButton>
       )}
     </BackgroundDiv>
   );

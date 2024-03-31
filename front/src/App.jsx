@@ -23,7 +23,6 @@ import Market from './pages/Market';
 import { CHAIN } from './utils/consts';
 import styled from 'styled-components'; // styled-components 임포트
 
-
 export const AppContext = createContext();
 
 function App() {
