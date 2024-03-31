@@ -6,20 +6,12 @@ export class BettingEntity {
   address: string
 
   @PrimaryColumn('int')
-  gameId: number
+  game_id: number
 
   @Column('int')
-  eggs: number
+  egg: number
 
   @Column('int')
   position: number
-  
-  @Column('text', { nullable: true})
-  merkleRoot: string | null
 
-  @Column('text', { nullable: true, array: true })
-  merkleProof: string[] | null
-
-  @Column('int', {nullable: true})
-  reward: number | null
 }

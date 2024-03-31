@@ -1,15 +1,93 @@
-export const connect = async (chain) => {
-  if (chain == "BFC") return connect_tbfc();
+import {
+  ALFAJORES_PARAMS,
+  KLAYTN_PARAMS,
+  NEON_PARAMS,
+  FHENIX_PARAMS,
+} from "./chainParams";
+
+import { CHAIN } from "../utils/consts";
+
+export const connect = async () => {
+  if (CHAIN == "CELO") return await connect_celo();
+  else if (CHAIN == "KLAYTN") return await connect_klaytn();
+  else if (CHAIN == "NEON") return await connect_neon();
+  else if (CHAIN == "FHENIX") return await connect_fhenix();
 };
 
 export const getChikenBalance = async (account, nft_c) => {
-  const response = await nft_c.methods.balanceof(account[0]);
-  return response;
+  const response = await nft_c.methods.balanceOf(account[0]).call();
+  return response.toString();
+};
+
+export const getChickenIds = async (account, nft_c, balance) => {
+  const ids = [];
+  for (let i = 0; i < balance; i++) {
+    const response = await nft_c.methods.tokenOfOwnerByIndex(account, i).call();
+    ids.push(Number(response));
+  }
+  return ids;
 };
 
 export const getNativeBalance = async (web3, account) => {
   const response = await web3.eth.getBalance(account[0]);
   return response;
+};
+
+export const getSellingList = async (vault_c) => {
+  const response = await vault_c.methods.getSellingChickens().call();
+  return response;
+};
+
+const connect_celo = async () => {
+  try {
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    await window.ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [ALFAJORES_PARAMS],
+    });
+    return accounts;
+  } catch (error) {}
+};
+
+const connect_klaytn = async () => {
+  try {
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    await window.ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [KLAYTN_PARAMS],
+    });
+    return accounts;
+  } catch (error) {}
+};
+
+const connect_neon = async () => {
+  try {
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    await window.ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [NEON_PARAMS],
+    });
+    return accounts;
+  } catch (error) {}
+};
+
+const connect_fhenix = async () => {
+  try {
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    await window.ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [FHENIX_PARAMS],
+    });
+    return accounts;
+  } catch (error) {}
 };
 
 const connect_tbfc = async () => {

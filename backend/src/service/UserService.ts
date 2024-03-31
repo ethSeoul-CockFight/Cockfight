@@ -4,16 +4,14 @@ export interface GetUserParam {
   address: string
 }
 
-interface GetUserResponse {
+interface GetUsersResponse {
   users: UserEntity[]
 }
 
-export async function getUser(
-  param: GetUserParam
-): Promise<GetUserResponse> {
+export async function getUsers(param: GetUserParam): Promise<GetUsersResponse> {
   const [db] = getDB()
   const queryRunner = db.createQueryRunner('slave')
-
+  console.log(param)
   try {
     const qb = queryRunner.manager.createQueryBuilder(
       UserEntity,
@@ -21,8 +19,9 @@ export async function getUser(
     )
     
     if (param.address) qb.where('user.address = :address', { address: param.address })
+    
     const users = await qb.getMany()
-
+    console.log(users, param.address)
     if (users.length == 0) throw new Error('user not found')
 
     return {

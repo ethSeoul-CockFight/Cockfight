@@ -8,18 +8,18 @@ import debugModule from 'debug'
 const debug = debugModule('orm')
 
 import { BettingEntity } from './BettingEntity'
-import { GameEntity } from './GameEntity'
 import { MarketEntity } from './MarketEntity'
-import { DashboardEntity } from './DashboardEntity'
 import { UserEntity } from './UserEntity'
+import { GameEntity } from './GameEntity'
+// import { DashboardEntity } from './DashboardEntity'
 import { YieldPlanEntity } from './YieldPlanEntity'
 
 export * from './BettingEntity'
-export * from './GameEntity'
 export * from './MarketEntity'
-export * from './DashboardEntity'
 export * from './UserEntity'
 export * from './YieldPlanEntity'
+export * from './GameEntity'
+// export * from './DashboardEntity'
 
 // import { AptosBettingEntity } from './aptos/AptosBettingEntity'
 // import { AptosGameEntity } from './aptos/AptosGameEntity'
@@ -39,7 +39,7 @@ export const staticOptions = {
     BettingEntity,
     GameEntity,
     MarketEntity,
-    DashboardEntity,
+    // DashboardEntity,
     UserEntity,
     YieldPlanEntity
   ],

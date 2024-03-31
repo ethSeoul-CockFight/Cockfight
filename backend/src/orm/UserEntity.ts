@@ -6,7 +6,10 @@ export class UserEntity {
     address: string
     
     @Column('int')
-    chicken: number
+    stable_chicken: number
+
+    @Column('int')
+    volatile_chicken: number
 
     @Column('int')
     egg: number

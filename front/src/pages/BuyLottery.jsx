@@ -43,14 +43,14 @@ const BuyLottery = () => {
         <h2 className="text-2xl font-bold my-4">
       Buy
       <input
-  type="number"
-  value={ticketNumber}
-  onChange={handleInputChange}
-  className="mx-2 bg-transparent text-center outline-none border-0 border-white"
-  style={{ width: 'auto', minWidth: '1rem' }}
-  min="1" // 최소값을 1로 설정
-  max="15" // 최대값을 15로 설정
-/>
+        type="number"
+        value={ticketNumber}
+        onChange={handleInputChange}
+        className="mx-2 bg-transparent text-center outline-none border-0 border-white"
+        style={{ width: 'auto', minWidth: '1rem' }}
+        min="1" // 최소값을 1로 설정
+        max="15" // 최대값을 15로 설정
+      />
 
       lottery tickets
     </h2>

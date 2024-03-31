@@ -3,12 +3,29 @@ import { KoaController, Get, Controller, Post, Validator } from 'koa-joi-control
 import { routeConfig, z } from 'koa-swagger-decorator'
 import { ErrorTypes } from 'lib/error'
 import { success, error } from 'lib/response'
-import { getBettingList, postBetting } from 'service'
-
-const Joi = Validator.Joi
+import { getBetting, getGame, postBetting } from 'service'
 
 @Controller('')
 export class BettingController extends KoaController {
+  @routeConfig({
+    method: 'get',
+    path: '/game',
+    summary: 'Get game data',
+    tags: ['Betting'],
+    operationId: 'getGame',
+    request: {
+      query: z.object({
+        address: z.string().optional(),
+      }),
+    },
+  })
+  @Get('/game')
+  async getGame(ctx: Context): Promise<void> {
+    const game = await getGame(ctx.query as any)
+    if (game) success(ctx, game)
+    else error(ctx, ErrorTypes.NOT_FOUND_ERROR)
+  }
+
   @routeConfig({
     method: 'get',
     path: '/betting',
@@ -18,14 +35,13 @@ export class BettingController extends KoaController {
     operationId: 'getBetting',
     request: {
       query: z.object({
-        game_id: z.number().optional(),
         address: z.string().optional(),
       }),
     },
   })
   @Get('/betting')
   async getBettingList(ctx: Context): Promise<void> {
-    const bettings = await getBettingList(ctx.query as any)
+    const bettings = await getBetting(ctx.query as any)
     if (bettings) success(ctx, bettings)
     else error(ctx, ErrorTypes.NOT_FOUND_ERROR)
   }
@@ -62,7 +78,7 @@ export class BettingController extends KoaController {
                 description: 'The eggs of the user'
               },
             },
-            required: ['game_id', 'winner_position']
+            required: ['game_id', 'address', 'winner_position', 'eggs']
           }
         },
       }
