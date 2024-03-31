@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 export const formatAmount = (amount, decimals) => {
   return new BigNumber(amount)
     .div(new BigNumber(10).pow(decimals))
-    .decimalPlaces(3)
+    .decimalPlaces(1)
     .toString();
 };
 
