@@ -143,9 +143,10 @@ const Scoreboard = styled.div`
   justify-content: center;
   align-items: center;
   width: 80%;
-height: 50px;
+  height: 50px;
   background-color: black;
   color: white;
+  border-radius: 25px; /* 둥근 모서리 */
   font-size: 30px;
   font-weight: 400;
   font-family:"Last Ninja", Impact, fantasy;
