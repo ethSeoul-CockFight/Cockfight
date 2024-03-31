@@ -66,17 +66,23 @@ const DigitContainer = styled.div`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%; /* Perfect circle */
-  background-color: #ffc0cb; /* Light pink background */
-  color: white;
-  font-size: 24px;
-  margin: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  font-family: 'Poppins', sans-serif;
-`;
+  width: 70px; /* 컨테이너의 너비를 약간 넓힙니다. */
+  height: 70px; /* 컨테이너의 높이를 약간 높입니다. */
+  border-radius: 50%; /* 완벽한 원을 유지합니다. */
+  background-color: #ffaddf; /* 배경색을 더 밝은 핑크색으로 변경합니다. */
+  color: #ffffff; /* 글자 색상을 유지합니다. */
+  font-size: 28px; /* 글자 크기를 더 크게 조정합니다. */
+  margin: 5px; /* 마진을 유지하여 컨테이너 간 간격을 둡니다. */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* 그림자를 더 두드러지게 합니다. */
+  font-family: 'Poppins', sans-serif; /* 폰트 패밀리를 유지합니다. */
+  font-weight: 600; /* 글자 무게를 중간 정도로 설정합니다. */
+  transition: transform 0.3s ease-in-out; /* 부드러운 변환 효과를 추가합니다. */
 
+  &:hover {
+    transform: scale(1.1); /* 호버 시 컨테이너를 약간 확대합니다. */
+    background-color: #ff1493; /* 호버 시 배경색을 더 진한 핑크색으로 변경합니다. */
+  }
+`;
 const CountdownContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -205,14 +211,21 @@ const Lottery = () => {
   const [userEgg, setUserEgg] = useState(0);
   const [mostRecentGame, setMostRecentGame] = useState({});
   const [userRecentBetting, setUserRecentBetting] = useState({});
-  const [winNumber, setWinNumber] = useState(1599);
+  const [winNumber, setWinNumber] = useState(0);
+  const [submitModal, setSubmitModal] = useState(false);
+  
   const navigate = useNavigate();
   const handleBet = (amount) => {
     setBetAmount(amount);
     // Additional logic for placing a bet...
   };
 
+  const onCloseSubmitModal = () => {
+    setSubmitModal(false);
+  };
+
   useEffect(() => {
+    setWinNumber(Math.floor(1000 + Math.random() * 9000));
     if (!account) {
       navigate('/main');
     }
@@ -291,7 +304,6 @@ const Lottery = () => {
       mostRecentGame.is_ended ||
       userRecentBetting.game_id === mostRecentGame.game_id
     ) {
-      window.location.reload();
       return;
     }
 
@@ -312,16 +324,13 @@ const Lottery = () => {
 
     // contract call
     await lotto_c.methods.makeBet(entry, betAmount).send({ from: account[0] });
-
+    setSubmitModal(true);
     setHasSubmitted(true); // Disable further submissions
-  };
-
-  const goMain = () => {
-    navigate('/main');
   };
 
   const handlePreviousBetting = async () => {
     try {
+      
       const didWin = entry === winNumber;
       setIsSuccess(didWin);
       setLotteryResult(
@@ -334,15 +343,17 @@ const Lottery = () => {
     }
   };
 
-  useEffect(() => {
-    if (hasCountdownFinished) {
-      handlePreviousBetting();
-      setHasSubmitted(false);
-    }
-  }, [hasCountdownFinished]);
+  // useEffect(() => {
+    
+  //   if (hasCountdownFinished) {
+      
+  //     setHasSubmitted(false);
+  //   }
+  // }, [hasCountdownFinished]);
 
   useEffect(() => {
     fetchData();
+    handlePreviousBetting();
   }, []);
 
   useEffect(() => {
@@ -353,7 +364,7 @@ const Lottery = () => {
 
         const now = new Date().getTime();
         if (targetDate <= now) {
-          handlePreviousBetting();
+          // handlePreviousBetting();
           setHasCountdownFinished(true);
           clearInterval(timer); // Stop the timer once the countdown is finished
         }
@@ -366,12 +377,12 @@ const Lottery = () => {
   return (
     <>
       <LotteryContainer>
-        {hasSubmitted && (
+        {submitModal && (
           <>
-            <ModalBackdrop onClick={() => setHasSubmitted(false)} />
+
+            <ModalBackdrop onClick={() => onCloseSubmitModal(false)} />
             <SuccessModal>
               <div>Your Betting Submitted!</div>
-              <button onClick={() => navigate('/main')}>[Close]</button>
             </SuccessModal>
           </>
         )}
@@ -399,9 +410,21 @@ const Lottery = () => {
             <Result isSuccess={isSuccess}>
               {lotteryResult}
               <div>
-                {entry.split('').map((digit, index) => (
-                  <DigitContainer key={index}>{digit}</DigitContainer>
-                ))}
+                <>
+                {
+                <DigitContainer>
+                    {entry.toString().padStart(4, '0')}
+                  </DigitContainer>
+                }
+                </>
+                <>
+                {
+                  <DigitContainer>
+                    {winNumber.toString().padStart(4, '0')}
+                  </DigitContainer>
+                }
+                </>
+                
               </div>
             </Result>
           )
