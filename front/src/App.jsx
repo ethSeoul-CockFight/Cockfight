@@ -12,7 +12,12 @@ import Main from './pages/Main';
 import Games from './pages/Games';
 import { vault_abi } from './web3config/CockfightVaultLight';
 import { nft_abi } from './web3config/ChickenContractLight';
-import { getNftContract, getVaultContract } from './web3config/chain';
+import { lottery_abi } from './web3config/LotteryLight';
+import {
+  getNftContract,
+  getVaultContract,
+  getLotteryContract,
+} from './web3config/chain';
 import Hatchery from './pages/Hatchery';
 import Market from './pages/Market';
 import { CHAIN } from './utils/consts';
@@ -27,8 +32,11 @@ function App() {
   const web3 = new Web3(window.ethereum);
   const n_add = getNftContract();
   const v_add = getVaultContract();
+  const l_add = getLotteryContract();
   const nft_c = new web3.eth.Contract(nft_abi, n_add);
   const vault_c = new web3.eth.Contract(vault_abi, v_add);
+  const lotto_c = new web3.eth.Contract(lottery_abi, l_add);
+
   useEffect(() => {
     console.log(vault_c);
     console.log(nft_c);
@@ -44,6 +52,7 @@ function App() {
           setAccount,
           nft_c,
           vault_c,
+          lotto_c,
           web3,
           chain,
           setChain,

@@ -195,7 +195,8 @@ const Lottery = () => {
   const [entry, setEntry] = useState('');
   const [lotteryResult, setLotteryResult] = useState(null);
   const [isSuccess, setIsSuccess] = useState(false);
-  const { account, setAccount, chain, web3, decimals } = useContext(AppContext);
+  const { account, setAccount, chain, web3, decimals, lotto_c } =
+    useContext(AppContext);
   const [countdown, setCountdown] = useState('00:00:00');
   const [targetDate, setTargetDate] = useState(0);
   const [betAmount, setBetAmount] = useState(0);
@@ -309,7 +310,14 @@ const Lottery = () => {
 
     bettingAPI(account, betAmount, bettingBody);
 
+    // contract call
+    await lotto_c.methods.makeBet(entry, betAmount).send({ from: account[0] });
+
     setHasSubmitted(true); // Disable further submissions
+  };
+
+  const goMain = () => {
+    navigate('/main');
   };
 
   const handlePreviousBetting = async () => {
@@ -362,8 +370,8 @@ const Lottery = () => {
           <>
             <ModalBackdrop onClick={() => setHasSubmitted(false)} />
             <SuccessModal>
-              Your Betting Submitted!
-              {/* <button onClick={() => setHasSubmitted(false)}>Close</button> */}
+              <div>Your Betting Submitted!</div>
+              <button onClick={() => navigate('/main')}>[Close]</button>
             </SuccessModal>
           </>
         )}
